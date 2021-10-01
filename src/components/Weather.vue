@@ -1,94 +1,120 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { WeatherData } from "../interfaces/WeatherData";
+import { computed, ref } from "vue";
+import { RawWeatherData, WeatherHour } from "../interfaces/WeatherData";
+import HourSlot from "./HourSlot.vue";
+
+const useFeelLikeTemp = ref(true);
 
 const lat = ref(0);
 const long = ref(0);
 
-const weatherData = ref<WeatherData | null>(null);
+console.log("run");
 
-const storage = window.localStorage;
+const rawWeatherData = ref<RawWeatherData | null>(null);
+const weatherData = computed(() => {
+  if (rawWeatherData.value) {
+    let pastHourly: WeatherHour[] = [];
+    let thisHour: WeatherHour | undefined = undefined;
+    let hourly: WeatherHour[] = [];
+    let maxTemp = Number.MIN_VALUE;
+    let minTemp = Number.MAX_VALUE;
 
-const weatherCodeMap = new Map<number, string>([
-  [0, "Clear sky"],
-  [1, "Mainly clear"],
-  [2, "partly cloudy"],
-  [3, "overcast"],
-  [45, "Fog"],
-  [48, "depositing rime fog"],
-  [51, "Light drizzle"],
-  [53, "moderate Drizzle "],
-  [55, "dense Drizzle"],
-  [56, "Light Freezing Drizzle"],
-  [57, "dense Freezing Drizzle"],
-  [61, "Slight Rain"],
-  [63, "moderate Rain"],
-  [65, "heavy Rain"],
-  [66, "Light Freezing Rain"],
-  [67, "heavy Freezing Rain"],
-  [71, "Slight Snow fall"],
-  [73, "moderate Snow fall"],
-  [75, "heavy Snow fall"],
-  [77, "Snow grains"],
-  [80, "Slight Rain showers"],
-  [81, "moderate Rain showers"],
-  [82, "violent Rain showers"],
-  [85, "slight Snow showers"],
-  [86, "heavy Snow showers"],
-  [95, "Thunderstorm"],
-  [96, "Thunderstorm with slight hail"],
-  [99, "Thunderstorm with heavy hail"],
-]);
 
-navigator.geolocation.getCurrentPosition((position) => {
-  lat.value = position.coords.latitude;
-  long.value = position.coords.longitude;
+    
+    for (let i = 0; i < rawWeatherData.value.hourly.time.length; i++) {
+      let hour = {
+        tempUnit: rawWeatherData.value.hourly_units.apparent_temperature,
+        feelLikeTemp: rawWeatherData.value.hourly.apparent_temperature[i],
+        temp: rawWeatherData.value.hourly.temperature_2m[i],
+        weatherCode: rawWeatherData.value.hourly.weathercode[i],
 
+        time: new Date(rawWeatherData.value.hourly.time[i] * 1000),
+      };
+
+      const temp = useFeelLikeTemp.value ? hour.feelLikeTemp : hour.temp;
+
+      if (temp > maxTemp) maxTemp = temp;
+      if (temp < minTemp) minTemp = temp;
+
+      if (now > hour.time.getTime()) {
+        pastHourly.push(hour);
+      } else if (now + 60 * 60 * 1000 > hour.time.getTime()) {
+        thisHour = hour;
+      } else {
+        hourly.push(hour);
+      }
+    }
+    console.log(minTemp, maxTemp);
+
+    return {
+      pastHourly: pastHourly,
+      thisHour: thisHour,
+      hourly: hourly,
+    };
+  }
+});
+const now = Date.now();
+
+const fetchWeatherData = () => {
   fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat.value}&longitude=${long.value}&hourly=temperature_2m,apparent_temperature,weathercode`
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat.value}&longitude=${long.value}&past_days=1&current_weather=true&timeformat=unixtime&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,weathercode,cloudcover,windspeed_10m`
   )
     .then((response) => response.json())
     .then((data) => {
-      weatherData.value = data;
+      rawWeatherData.value = data;
     });
+};
 
-  const count = ref(0);
+const storedLat = localStorage.getItem("lat");
+const storedLong = localStorage.getItem("long");
+if (storedLat && storedLong) {
+  lat.value = Number.parseFloat(storedLat);
+  long.value = Number.parseFloat(storedLong);
+  fetchWeatherData();
+}
+
+navigator.geolocation.getCurrentPosition((position) => {
+  let newLat = position.coords.latitude;
+  let newLong = position.coords.longitude;
+
+  if (
+    Math.floor(lat.value * 1000) !== Math.floor(newLat * 1000) ||
+    Math.floor(long.value * 1000) !== Math.floor(newLong * 1000)
+  ) {
+    lat.value = newLat;
+    long.value = newLong;
+
+    localStorage.setItem("lat", lat.value.toString());
+    localStorage.setItem("long", long.value.toString());
+
+    fetchWeatherData();
+  }
 });
 </script>
 
 <template>
   <p>{{ lat }}</p>
   <p>{{ long }}</p>
-  <div class="column">
+  <div v-if="weatherData">
     <div>
-      <p v-for="time in weatherData?.hourly.time">
-        {{ time }}
-      </p>
+      <HourSlot
+        v-for="hour in weatherData.pastHourly"
+        :hour="hour"
+        type="past"
+      />
     </div>
     <div>
-      <p v-for="code in weatherData?.hourly.weathercode">
-        {{ weatherCodeMap.get(code) }}
-      </p>
-    </div>
-    <div>
-      <p v-for="temp in weatherData?.hourly.temperature_2m">
-        {{ temp }}
-      </p>
-    </div>
-    <div>
-      <p v-for="temp in weatherData?.hourly.apparent_temperature">
-        feels like: {{ temp }}
-        {{ weatherData?.hourly_units.apparent_temperature }}
-      </p>
+      <HourSlot
+        v-if="weatherData.thisHour"
+        :hour="weatherData.thisHour"
+        type="now"
+      />
+      <HourSlot v-for="hour in weatherData.hourly" :hour="hour" type="future" />
     </div>
   </div>
-  <p>{{ weatherData?.hourly.temperature_2m }}</p>
+  <p>
+    <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
+  </p>
 </template>
 
-<style scoped>
-.column {
-  text-align: left;
-  display: flex;
-  justify-content: center;
-}
-</style>
+<style scoped></style>
