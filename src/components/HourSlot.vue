@@ -3,7 +3,6 @@ import { WeatherHour } from "../interfaces/WeatherData";
 
 defineProps<{
   hour: WeatherHour;
-  type: "future" | "now" | "past";
 }>();
 
 const weatherCodeMap = new Map<number, string>([
@@ -37,35 +36,30 @@ const weatherCodeMap = new Map<number, string>([
   [99, "Thunderstorm With Heavy Hail"],
 ]);
 
-const options: Intl.DateTimeFormatOptions = {
-  weekday: "short",
-  month: "short",
-  day: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
+const timeOptions: Intl.DateTimeFormatOptions = {
+  hour: "numeric",
 };
+
 </script>
 
 <template>
-  <div :class="{ hour: true, past: type === 'past', now: type === 'now' }">
+  <div :class="{ hour: true, past: hour.tense === 'past', now: hour.tense === 'now' }">
     <p>
-      {{ hour.time.toLocaleString("en-us", options) }}
+      {{ hour.time.toLocaleString("en-us", timeOptions) }}
     </p>
     <p>
       {{ weatherCodeMap.get(hour.weatherCode) }}
     </p>
-    <p>feels like {{ hour.feelLikeTemp }} {{ hour.tempUnit }}</p>
+    <p>feels like {{ hour.feelLikeTemp }} {{ hour.tempUnit }} actual {{hour.temp}} {{ hour.tempUnit }}</p>
   </div>
 </template>
 
 <style>
-
-
 .hour {
   background-color: antiquewhite;
   text-align: center;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 5fr 5fr;
 }
 
 .past {

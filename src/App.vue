@@ -1,6 +1,6 @@
 <script setup lang="ts">
 if (window.location.href.substr(0, 5) !== "https") {
-  // window.location.href = window.location.href.replace("http", "https");
+  window.location.href = window.location.href.replace("http", "https");
 }
 </script>
 
