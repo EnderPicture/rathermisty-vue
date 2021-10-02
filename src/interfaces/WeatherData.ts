@@ -1,42 +1,44 @@
 export interface RawWeatherData {
-  utc_offset_seconds: number;
-  longitude: number;
-  elevation: number;
-  latitude: number;
-  current_weather: CurrentWeather;
   hourly: Hourly;
   hourly_units: HourlyUnits;
   generationtime_ms: number;
+  utc_offset_seconds: number;
+  elevation: number;
+  latitude: number;
+  longitude: number;
+  current_weather: CurrentWeather;
 }
 
 export interface CurrentWeather {
+  winddirection: number;
+  weathercode: number;
   temperature: number;
   time: number;
-  winddirection: number;
   windspeed: number;
-  weathercode: number;
 }
 
 export interface Hourly {
-  relativehumidity_2m: number[];
-  weathercode: number[];
-  cloudcover: number[];
-  windspeed_10m: number[];
   apparent_temperature: number[];
-  time: number[];
   dewpoint_2m: number[];
+  windspeed_10m: number[];
+  time: number[];
+  precipitation: number[];
   temperature_2m: number[];
+  relativehumidity_2m: number[];
+  cloudcover: number[];
+  weathercode: number[];
 }
 
 export interface HourlyUnits {
-  relativehumidity_2m: string;
-  weathercode: string;
-  cloudcover: string;
-  windspeed_10m: string;
   apparent_temperature: string;
-  time: string;
   dewpoint_2m: string;
+  windspeed_10m: string;
   temperature_2m: string;
+  time: string;
+  precipitation: string;
+  relativehumidity_2m: string;
+  cloudcover: string;
+  weathercode: string;
 }
 
 export interface WeatherHour {
@@ -48,4 +50,11 @@ export interface WeatherHour {
   newDay: boolean;
   newWeather: boolean;
   tense: string;
+
+  cloudCover: number;
+  dewPoint: number;
+  relativeHumidity: number;
+  windSpeed: number;
+  precipitation: number;
+  precipitationUnit: string;
 }

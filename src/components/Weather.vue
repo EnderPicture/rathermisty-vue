@@ -49,8 +49,15 @@ const weatherData = computed(() => {
 
       let hour: WeatherHour = {
         tempUnit: rawWeatherData.value.hourly_units.apparent_temperature,
+        precipitationUnit: rawWeatherData.value.hourly_units.precipitation,
         feelLikeTemp: rawWeatherData.value.hourly.apparent_temperature[i],
         temp: rawWeatherData.value.hourly.temperature_2m[i],
+        cloudCover: rawWeatherData.value.hourly.cloudcover[i],
+        dewPoint: rawWeatherData.value.hourly.dewpoint_2m[i],
+        relativeHumidity: rawWeatherData.value.hourly.relativehumidity_2m[i],
+        windSpeed: rawWeatherData.value.hourly.windspeed_10m[i],
+        precipitation: rawWeatherData.value.hourly.precipitation[i],
+
         weatherCode: weatherCode,
 
         time: time,
@@ -89,7 +96,7 @@ const now = Date.now();
 
 const fetchWeatherData = () => {
   fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat.value}&longitude=${long.value}&past_days=1&current_weather=true&timeformat=unixtime&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,weathercode,cloudcover,windspeed_10m`
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat.value}&longitude=${long.value}&past_days=1&current_weather=true&timeformat=unixtime&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,weathercode,cloudcover,precipitation,windspeed_10m`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -128,21 +135,18 @@ navigator.geolocation.getCurrentPosition((position) => {
   <p>{{ lat }}</p>
   <p>{{ long }}</p>
   <label>
-    <p>show past</p>
-    <input type="checkbox" v-model="hidePast" />
+    <p>feel like tempreature</p>
+    <input type="checkbox" v-model="useFeelLikeTemp" />
   </label>
-  <div v-if="weatherData">
-    <div v-show="!hidePast">
-      <!-- <div>
-        <HourSlot v-for="hour in weatherData.pastHourly" :hour="hour" />
-      </div> -->
-      <div>
-        <HourSlot v-if="weatherData.thisHour" :hour="weatherData.thisHour" />
-        <HourSlot v-for="hour in weatherData.hourly" :hour="hour" />
-      </div>
-    </div>
-    <div v-show="hidePast">
-      <DaySlot v-for="day in weatherData.days" :day="day" />
+  <div class="all-weather" v-if="weatherData">
+    <div>
+      <DaySlot
+        v-for="day in weatherData.days"
+        :day="day"
+        :min-temp="weatherData.minTemp"
+        :max-temp="weatherData.maxTemp"
+        :use-feelslike="useFeelLikeTemp"
+      />
     </div>
   </div>
   <p>
@@ -150,4 +154,9 @@ navigator.geolocation.getCurrentPosition((position) => {
   </p>
 </template>
 
-<style scoped></style>
+<style scoped>
+.all-weather {
+  max-width: 30rem;
+  margin: 0 auto;
+}
+</style>

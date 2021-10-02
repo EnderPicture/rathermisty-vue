@@ -1,7 +1,7 @@
 <script setup lang="ts">
-if (window.location.href.substr(0, 5) !== "https") {
-  window.location.href = window.location.href.replace("http", "https");
-}
+// if (window.location.href.substr(0, 5) !== "https") {
+//   window.location.href = window.location.href.replace("http", "https");
+// }
 </script>
 
 <template>
@@ -11,10 +11,14 @@ if (window.location.href.substr(0, 5) !== "https") {
 </template>
 
 <style>
+body {
+  margin: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 
   text-align: center;
   color: #2c3e50;

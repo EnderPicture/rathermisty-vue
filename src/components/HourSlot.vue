@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import { WeatherHour } from "../interfaces/WeatherData";
 
-defineProps<{
+const props = defineProps<{
   hour: WeatherHour;
+  minTemp: number;
+  maxTemp: number;
+  useFeelslike: boolean;
 }>();
 
 const weatherCodeMap = new Map<number, string>([
@@ -40,32 +44,104 @@ const timeOptions: Intl.DateTimeFormatOptions = {
   hour: "numeric",
 };
 
+const dayContainer = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+  if (dayContainer.value !== null && props.hour.tense === "now") {
+    dayContainer.value.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+});
+
+const tempPercent = computed(() => {
+  const delta = props.maxTemp - props.minTemp;
+  if (props.useFeelslike) {
+    return ((props.maxTemp - props.hour.feelLikeTemp) / delta) * 100;
+  } else {
+    return ((props.maxTemp - props.hour.temp) / delta) * 100;
+  }
+});
 </script>
 
 <template>
-  <div :class="{ hour: true, past: hour.tense === 'past', now: hour.tense === 'now' }">
-    <p>
-      {{ hour.time.toLocaleString("en-us", timeOptions) }}
-    </p>
-    <p>
-      {{ weatherCodeMap.get(hour.weatherCode) }}
-    </p>
-    <p>feels like {{ hour.feelLikeTemp }} {{ hour.tempUnit }} actual {{hour.temp}} {{ hour.tempUnit }}</p>
+  <div
+    ref="dayContainer"
+    :class="{
+      hour: true,
+      past: hour.tense === 'past',
+      now: hour.tense === 'now',
+    }"
+  >
+    <div class="info">
+      <p>
+        {{ hour.time.toLocaleString("en-us", timeOptions) }}
+      </p>
+      <p v-if="hour.newWeather">
+        {{ weatherCodeMap.get(hour.weatherCode) }}
+      </p>
+    </div>
+    <div class="data">
+      <p v-if="useFeelslike">
+        {{ hour.feelLikeTemp.toFixed(1) }} {{ hour.tempUnit }}
+      </p>
+      <p v-else>{{ hour.temp.toFixed(1) }} {{ hour.tempUnit }}</p>
+      <p v-if="hour.precipitation > 0">{{ hour.precipitation }} {{ hour.precipitationUnit }}</p>
+    </div>
+    <div class="temp-bar">
+      <div class="spot" :style="{ right: `${tempPercent}%` }"></div>
+    </div>
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
 .hour {
   background-color: antiquewhite;
-  text-align: center;
-  display: grid;
-  grid-template-columns: 1fr 5fr 5fr;
+  text-align: left;
+  display: flex;
+  padding: 0 1rem;
+  
+  &+.hour {
+    border-top: solid 1px #ddd;
+  }
+  &.past {
+    opacity: 0.5;
+  }
+  &.now {
+    background-color: azure;
+  }
 }
 
-.past {
-  opacity: 0.5;
+.data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  * {
+    text-align: right;
+    margin: 0;
+  }
 }
-.now {
-  background-color: azure;
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.5rem;
+  p {
+    margin: 0;
+  }
+}
+.temp-bar {
+  flex-basis: 35%;
+  background-color: gray;
+  position: relative;
+  margin: 0 10px;
+
+  .spot {
+    background-color: black;
+    height: 100%;
+    width: 10px;
+    position: absolute;
+    top: 0;
+    transform: translateX(50%);
+  }
 }
 </style>
