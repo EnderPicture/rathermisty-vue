@@ -58,3 +58,12 @@ export interface WeatherHour {
   precipitation: number;
   precipitationUnit: string;
 }
+
+export interface WeatherData {
+  pastHourly: WeatherHour[];
+  thisHour: WeatherHour | undefined;
+  hourly: WeatherHour[];
+  days: WeatherHour[][];
+  maxTemp: number;
+  minTemp: number;
+}

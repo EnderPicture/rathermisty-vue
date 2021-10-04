@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { WeatherHour } from "../interfaces/WeatherData";
+import { WeatherHour } from "../interfaces/Types";
 
 const props = defineProps<{
   hour: WeatherHour;
@@ -84,7 +84,9 @@ const tempPercent = computed(() => {
         {{ hour.feelLikeTemp.toFixed(1) }} {{ hour.tempUnit }}
       </p>
       <p v-else>{{ hour.temp.toFixed(1) }} {{ hour.tempUnit }}</p>
-      <p v-if="hour.precipitation > 0">{{ hour.precipitation }} {{ hour.precipitationUnit }}</p>
+      <p v-if="hour.precipitation > 0">
+        {{ hour.precipitation }} {{ hour.precipitationUnit }}
+      </p>
     </div>
     <div class="temp-bar">
       <div class="spot" :style="{ right: `${tempPercent}%` }"></div>
@@ -98,8 +100,8 @@ const tempPercent = computed(() => {
   text-align: left;
   display: flex;
   padding: 0 1rem;
-  
-  &+.hour {
+
+  & + .hour {
     border-top: solid 1px #ddd;
   }
   &.past {

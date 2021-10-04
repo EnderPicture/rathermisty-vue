@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { RawWeatherData, WeatherHour } from "../interfaces/WeatherData";
+import { RawWeatherData, WeatherHour, WeatherData } from "../interfaces/Types";
 import HourSlot from "./HourSlot.vue";
 import DaySlot from "./DaySlot.vue";
+import { crunchWeatherData } from "../helpers/weather-data-crunch";
 
 const useFeelLikeTemp = ref(true);
 const hidePast = ref(true);
@@ -11,86 +12,10 @@ const lat = ref(0);
 const long = ref(0);
 
 const rawWeatherData = ref<RawWeatherData | null>(null);
-const weatherData = computed(() => {
-  if (rawWeatherData.value) {
-    let pastHourly: WeatherHour[] = [];
-    let thisHour: WeatherHour | undefined = undefined;
-    let hourly: WeatherHour[] = [];
-    let days: WeatherHour[][] = [];
-    let maxTemp = Number.MIN_VALUE;
-    let minTemp = Number.MAX_VALUE;
-
-    let lastWeatherCode = -1;
-    let lastDay = -1;
-
-    for (let i = 0; i < rawWeatherData.value.hourly.time.length; i++) {
-      let time = new Date(rawWeatherData.value.hourly.time[i] * 1000);
-      let weatherCode = rawWeatherData.value.hourly.weathercode[i];
-
-      let newDay = false;
-      if (time.getDate() !== lastDay) {
-        newDay = true;
-        days.push([]);
-        lastDay = time.getDate();
-      }
-
-      let newWeather = false;
-      if (weatherCode != lastWeatherCode) {
-        newWeather = true;
-        lastWeatherCode = weatherCode;
-      }
-
-      let tense = "future";
-      if (now - 60 * 60 * 1000 > time.getTime()) {
-        tense = "past";
-      } else if (now > time.getTime()) {
-        tense = "now";
-      }
-
-      let hour: WeatherHour = {
-        tempUnit: rawWeatherData.value.hourly_units.apparent_temperature,
-        precipitationUnit: rawWeatherData.value.hourly_units.precipitation,
-        feelLikeTemp: rawWeatherData.value.hourly.apparent_temperature[i],
-        temp: rawWeatherData.value.hourly.temperature_2m[i],
-        cloudCover: rawWeatherData.value.hourly.cloudcover[i],
-        dewPoint: rawWeatherData.value.hourly.dewpoint_2m[i],
-        relativeHumidity: rawWeatherData.value.hourly.relativehumidity_2m[i],
-        windSpeed: rawWeatherData.value.hourly.windspeed_10m[i],
-        precipitation: rawWeatherData.value.hourly.precipitation[i],
-
-        weatherCode: weatherCode,
-
-        time: time,
-        newDay: newDay,
-        newWeather: newWeather,
-        tense: tense,
-      };
-
-      const temp = useFeelLikeTemp.value ? hour.feelLikeTemp : hour.temp;
-
-      if (temp > maxTemp) maxTemp = temp;
-      if (temp < minTemp) minTemp = temp;
-
-      if (now > hour.time.getTime()) {
-        pastHourly.push(hour);
-      } else if (now + 60 * 60 * 1000 > hour.time.getTime()) {
-        thisHour = hour;
-      } else {
-        hourly.push(hour);
-      }
-      days[days.length - 1].push(hour);
+const weatherData = computed<WeatherData | undefined>(() => {
+    if (rawWeatherData.value) {
+      return crunchWeatherData(rawWeatherData.value);
     }
-    console.log(minTemp, maxTemp);
-
-    return {
-      pastHourly: pastHourly,
-      thisHour: thisHour,
-      hourly: hourly,
-      days: days,
-      maxTemp: maxTemp,
-      minTemp: minTemp,
-    };
-  }
 });
 const now = Date.now();
 
@@ -113,8 +38,10 @@ if (storedLat && storedLong) {
 }
 
 navigator.geolocation.getCurrentPosition((position) => {
-  let newLat = position.coords.latitude;
-  let newLong = position.coords.longitude;
+  // let newLat = position.coords.latitude;
+  // let newLong = position.coords.longitude;
+  let newLat = 37.7577627;
+  let newLong = -122.4726194;
 
   if (
     Math.floor(lat.value * 1000) !== Math.floor(newLat * 1000) ||
@@ -132,8 +59,8 @@ navigator.geolocation.getCurrentPosition((position) => {
 </script>
 
 <template>
-  <p>{{ lat }}</p>
-  <p>{{ long }}</p>
+  <!-- <p>{{ lat }}</p>
+  <p>{{ long }}</p> -->
   <label>
     <p>feel like tempreature</p>
     <input type="checkbox" v-model="useFeelLikeTemp" />

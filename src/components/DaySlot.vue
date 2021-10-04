@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WeatherHour } from "../interfaces/WeatherData";
+import { WeatherHour } from "../interfaces/Types";
 import HourSlot from "./HourSlot.vue";
 
 const props = defineProps<{
