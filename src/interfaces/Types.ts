@@ -41,9 +41,17 @@ export interface HourlyUnits {
   weathercode: string;
 }
 
+export interface WeatherDay {
+  tense: string;
+  minTemp: number;
+  maxTemp: number;
+  minApparentTemp: number;
+  maxApparentTemp: number;
+  hours: WeatherHour[];
+}
 export interface WeatherHour {
   tempUnit: string;
-  feelLikeTemp: number;
+  apparentTemp: number;
   temp: number;
   weatherCode: number;
   time: Date;
@@ -60,10 +68,7 @@ export interface WeatherHour {
 }
 
 export interface WeatherData {
-  pastHourly: WeatherHour[];
-  thisHour: WeatherHour | undefined;
-  hourly: WeatherHour[];
-  days: WeatherHour[][];
+  days: WeatherDay[];
   maxTemp: number;
   minTemp: number;
 }

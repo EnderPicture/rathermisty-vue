@@ -55,7 +55,7 @@ onMounted(() => {
 const tempPercent = computed(() => {
   const delta = props.maxTemp - props.minTemp;
   if (props.useFeelslike) {
-    return ((props.maxTemp - props.hour.feelLikeTemp) / delta) * 100;
+    return ((props.maxTemp - props.hour.apparentTemp) / delta) * 100;
   } else {
     return ((props.maxTemp - props.hour.temp) / delta) * 100;
   }
@@ -81,7 +81,7 @@ const tempPercent = computed(() => {
     </div>
     <div class="data">
       <p v-if="useFeelslike">
-        {{ hour.feelLikeTemp.toFixed(1) }} {{ hour.tempUnit }}
+        {{ hour.apparentTemp.toFixed(1) }} {{ hour.tempUnit }}
       </p>
       <p v-else>{{ hour.temp.toFixed(1) }} {{ hour.tempUnit }}</p>
       <p v-if="hour.precipitation > 0">

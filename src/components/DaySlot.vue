@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { WeatherHour } from "../interfaces/Types";
+import { WeatherDay, WeatherHour } from "../interfaces/Types";
 import HourSlot from "./HourSlot.vue";
 
 const props = defineProps<{
-  day: WeatherHour[];
+  day: WeatherDay;
   minTemp: number;
   maxTemp: number;
   useFeelslike: boolean;
@@ -19,10 +19,10 @@ const dayOptions: Intl.DateTimeFormatOptions = {
 <template>
   <div>
     <h2 class="day-title">
-      {{ day[0].time.toLocaleString("en-us", dayOptions) }}
+      {{ day.hours[0].time.toLocaleString("en-us", dayOptions) }}
     </h2>
     <HourSlot
-      v-for="hour in day"
+      v-for="hour in day.hours"
       :hour="hour"
       :min-temp="minTemp"
       :max-temp="maxTemp"
