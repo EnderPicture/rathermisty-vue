@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { RawWeatherData, WeatherHour, WeatherData } from "../interfaces/Types";
 import HourSlot from "./HourSlot.vue";
 import DaySlot from "./DaySlot.vue";
-import { crunchWeatherData } from "../helpers/weather-data-crunch";
+import { crunchWeatherData } from "../helpers/data-crunch";
 
 const useFeelLikeTemp = ref(true);
 const hidePast = ref(true);
