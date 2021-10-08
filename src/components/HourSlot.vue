@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { WeatherHour } from "../interfaces/Types";
+import { Options, WeatherData, WeatherDay, WeatherHour } from "../interfaces/Types";
 
 const props = defineProps<{
   hour: WeatherHour;
-  minTemp: number;
-  maxTemp: number;
-  useFeelslike: boolean;
+  day: WeatherDay;
+  weatherData: WeatherData;
+  options: Options;
 }>();
 
 const weatherCodeMap = new Map<number, string>([
@@ -53,11 +53,12 @@ onMounted(() => {
 });
 
 const tempPercent = computed(() => {
-  const delta = props.maxTemp - props.minTemp;
-  if (props.useFeelslike) {
-    return ((props.maxTemp - props.hour.apparentTemp) / delta) * 100;
+  if (props.options.useFeelLikeTemp) {
+    const delta = props.weatherData.apparentTempRange.max - props.weatherData.apparentTempRange.min;
+    return ((props.hour.values.apparent_temperature - props.weatherData.apparentTempRange.min) / delta) * 100;
   } else {
-    return ((props.maxTemp - props.hour.temp) / delta) * 100;
+    const delta = props.weatherData.tempRange.max - props.weatherData.tempRange.min;
+    return ((props.hour.values.temperature_2m - props.weatherData.tempRange.min) / delta) * 100;
   }
 });
 </script>
@@ -73,23 +74,23 @@ const tempPercent = computed(() => {
   >
     <div class="info">
       <p>
-        {{ hour.time.toLocaleString("en-us", timeOptions) }}
+        {{ hour.date.toLocaleString("en-us", timeOptions) }}
       </p>
-      <p v-if="hour.newWeather">
-        {{ weatherCodeMap.get(hour.weatherCode) }}
+      <p v-if="hour.newWeatherCode">
+        {{ weatherCodeMap.get(hour.values.weathercode) }}
       </p>
     </div>
     <div class="data">
-      <p v-if="useFeelslike">
-        {{ hour.apparentTemp.toFixed(1) }} {{ hour.tempUnit }}
+      <p v-if="options.useFeelLikeTemp">
+        {{ hour.values.apparent_temperature.toFixed(1) }} {{ hour.units.apparent_temperature }}
       </p>
-      <p v-else>{{ hour.temp.toFixed(1) }} {{ hour.tempUnit }}</p>
-      <p v-if="hour.precipitation > 0">
-        {{ hour.precipitation }} {{ hour.precipitationUnit }}
+      <p v-else>{{ hour.values.temperature_2m.toFixed(1) }} {{ hour.units.temperature_2m }}</p>
+      <p v-if="hour.values.precipitation > 0">
+        {{ hour.values.precipitation }} {{ hour.units.precipitation }}
       </p>
     </div>
     <div class="temp-bar">
-      <div class="spot" :style="{ right: `${tempPercent}%` }"></div>
+      <div class="spot" :style="{ left: `${tempPercent}%` }"></div>
     </div>
   </div>
 </template>
@@ -143,7 +144,7 @@ const tempPercent = computed(() => {
     width: 10px;
     position: absolute;
     top: 0;
-    transform: translateX(50%);
+    transform: translateX(-50%);
   }
 }
 </style>

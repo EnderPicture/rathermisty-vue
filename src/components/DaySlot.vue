@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { WeatherDay, WeatherHour } from "../interfaces/Types";
+import {
+  Options,
+  WeatherData,
+  WeatherDay,
+  WeatherHour,
+} from "../interfaces/Types";
 import HourSlot from "./HourSlot.vue";
 
 const props = defineProps<{
   day: WeatherDay;
-  minTemp: number;
-  maxTemp: number;
-  useFeelslike: boolean;
+  weatherData: WeatherData;
+  options: Options;
 }>();
 
 const dayOptions: Intl.DateTimeFormatOptions = {
@@ -19,14 +23,14 @@ const dayOptions: Intl.DateTimeFormatOptions = {
 <template>
   <div>
     <h2 class="day-title">
-      {{ day.hours[0].time.toLocaleString("en-us", dayOptions) }}
+      {{ day.date.toLocaleString("en-us", dayOptions) }}
     </h2>
     <HourSlot
       v-for="hour in day.hours"
       :hour="hour"
-      :min-temp="minTemp"
-      :max-temp="maxTemp"
-      :use-feelslike="useFeelslike"
+      :weather-data="weatherData"
+      :options="options"
+      :day="day"
     />
   </div>
 </template>

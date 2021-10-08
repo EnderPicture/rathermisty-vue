@@ -39,10 +39,12 @@ export const crunchWeatherData = (
     const hour: WeatherHour = {
       date: new Date(rawWeatherData.hourly.time[i]),
       tense: "past",
+      newWeatherCode: false,
       units: rollup(-1, rawWeatherData.hourly_units) as HourlyUnits,
       values: rollup(i, rawWeatherData.hourly) as HourlyData,
     };
     hour.tense = computeTense(hour.date, 1);
+    hour.newWeatherCode = lastHour?.values.weathercode != hour.values.weathercode;
 
     // new day
     if (lastHour?.date.getDate() !== hour.date.getDate()) {

@@ -187,6 +187,7 @@ export interface WeatherHour {
   tense: Tense;
 
   date: Date;
+  newWeatherCode: boolean;
   units: HourlyUnits;
   values: HourlyData;
 }
@@ -214,4 +215,9 @@ export interface ValueRange {
 
 export interface LooseObject {
   [key: string]: any;
+}
+
+export interface Options {
+  useFeelLikeTemp: boolean;
+  hidePast: boolean;
 }
