@@ -16,9 +16,6 @@ const options = ref<Options>({
   hidePast: true,
 });
 
-const useFeelLikeTemp = ref(true);
-const hidePast = ref(true);
-
 const lat = ref(0);
 const long = ref(0);
 
@@ -113,14 +110,17 @@ fetchCurrentLocation();
     <input type="checkbox" v-model="options.useFeelLikeTemp" />
   </label>
   <section class="all-weather" v-if="weatherData">
-    <article>
-      <DaySlot
-        v-for="day in pastDays"
-        :day="day"
-        :weather-data="weatherData"
-        :options="options"
-      />
-    </article>
+    <details>
+      <summary>past</summary>
+      <article>
+        <DaySlot
+          v-for="day in pastDays"
+          :day="day"
+          :weather-data="weatherData"
+          :options="options"
+        />
+      </article>
+    </details>
     <article>
       <DaySlot
         v-for="day in nowFutureDays"
@@ -135,7 +135,7 @@ fetchCurrentLocation();
   </p>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .all-weather {
   max-width: 30rem;
   margin: 0 auto;

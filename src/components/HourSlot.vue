@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { Options, WeatherData, WeatherDay, WeatherHour } from "../interfaces/Types";
+import {
+  Options,
+  WeatherData,
+  WeatherDay,
+  WeatherHour,
+} from "../interfaces/Types";
 
 const props = defineProps<{
   hour: WeatherHour;
@@ -54,11 +59,23 @@ onMounted(() => {
 
 const tempPercent = computed(() => {
   if (props.options.useFeelLikeTemp) {
-    const delta = props.weatherData.apparentTempRange.max - props.weatherData.apparentTempRange.min;
-    return ((props.hour.values.apparent_temperature - props.weatherData.apparentTempRange.min) / delta) * 100;
+    const delta =
+      props.weatherData.apparentTempRange.max -
+      props.weatherData.apparentTempRange.min;
+    return (
+      ((props.hour.values.apparent_temperature -
+        props.weatherData.apparentTempRange.min) /
+        delta) *
+      100
+    );
   } else {
-    const delta = props.weatherData.tempRange.max - props.weatherData.tempRange.min;
-    return ((props.hour.values.temperature_2m - props.weatherData.tempRange.min) / delta) * 100;
+    const delta =
+      props.weatherData.tempRange.max - props.weatherData.tempRange.min;
+    return (
+      ((props.hour.values.temperature_2m - props.weatherData.tempRange.min) /
+        delta) *
+      100
+    );
   }
 });
 </script>
@@ -82,9 +99,13 @@ const tempPercent = computed(() => {
     </div>
     <div class="data">
       <p v-if="options.useFeelLikeTemp">
-        {{ hour.values.apparent_temperature.toFixed(1) }} {{ hour.units.apparent_temperature }}
+        {{ hour.values.apparent_temperature.toFixed(1) }}
+        {{ hour.units.apparent_temperature }}
       </p>
-      <p v-else>{{ hour.values.temperature_2m.toFixed(1) }} {{ hour.units.temperature_2m }}</p>
+      <p v-else>
+        {{ hour.values.temperature_2m.toFixed(1) }}
+        {{ hour.units.temperature_2m }}
+      </p>
       <p v-if="hour.values.precipitation > 0">
         {{ hour.values.precipitation }} {{ hour.units.precipitation }}
       </p>
