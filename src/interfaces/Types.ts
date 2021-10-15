@@ -190,6 +190,8 @@ export interface WeatherHour {
   newWeatherCode: boolean;
   units: HourlyUnits;
   values: HourlyData;
+
+  nextHour?: WeatherHour;
 }
 
 export interface WeatherDay {
@@ -200,6 +202,8 @@ export interface WeatherDay {
   values: DailyData;
 
   hours: WeatherHour[];
+
+  nextDay?: WeatherDay;
 }
 export interface WeatherData {
   days: WeatherDay[];

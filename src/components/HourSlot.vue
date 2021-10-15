@@ -48,14 +48,18 @@ const weatherCodeMap = new Map<number, string>([
 const timeOptions: Intl.DateTimeFormatOptions = {
   hour: "numeric",
 };
+const timeOptionsWithMin: Intl.DateTimeFormatOptions = {
+  hour: "numeric",
+  minute: "numeric",
+};
 
 const dayContainer = ref<HTMLElement | null>(null);
 
-onMounted(() => {
-  if (dayContainer.value !== null && props.hour.tense === "now") {
-    dayContainer.value.scrollIntoView({ block: "center", behavior: "smooth" });
-  }
-});
+// onMounted(() => {
+//   if (dayContainer.value !== null && props.hour.tense === "now") {
+//     dayContainer.value.scrollIntoView({ block: "center", behavior: "smooth" });
+//   }
+// });
 
 const tempPercent = computed(() => {
   if (props.options.useFeelLikeTemp) {
@@ -78,20 +82,34 @@ const tempPercent = computed(() => {
     );
   }
 });
+
+let sunRise = new Date(props.day.values.sunrise);
+let sunSet = new Date(props.day.values.sunset);
+
+if (sunSet.getDay() != props.day.date.getDay() && props.day.nextDay) {
+  sunSet = new Date(props.day.nextDay.values.sunset);
+}
+
+const nextHour = new Date(props.hour.date).setHours(
+  props.hour.date.getHours() + 1
+);
+const hourBeforeSunRise = +props.hour.date < +sunRise && +sunRise < +nextHour;
+const hourBeforeSunSet = +props.hour.date < +sunSet && +sunSet < +nextHour;
 </script>
 
 <template>
-  <div
+  <article
     ref="dayContainer"
     :class="{
       hour: true,
       past: hour.tense === 'past',
       now: hour.tense === 'now',
+      night_time: !(+sunRise < +hour.date && +hour.date < +sunSet),
     }"
   >
     <div class="info">
       <p>
-        {{ hour.date.toLocaleString("en-us", timeOptions) }}
+        {{ hour.date.toLocaleString("en-us", timeOptions).toLowerCase() }}
       </p>
       <p v-if="hour.newWeatherCode">
         {{ weatherCodeMap.get(hour.values.weathercode) }}
@@ -110,28 +128,58 @@ const tempPercent = computed(() => {
         {{ hour.values.precipitation }} {{ hour.units.precipitation }}
       </p>
     </div>
-    <div class="temp-bar">
+    <div class="temp_bar">
       <div class="spot" :style="{ left: `${tempPercent}%` }"></div>
     </div>
-  </div>
+  </article>
+  <article class="golden_hour" v-if="hourBeforeSunRise">
+    <p>
+      {{
+        sunRise.toLocaleString("en-us", timeOptionsWithMin).toLowerCase()
+      }}
+      sun rise
+    </p>
+  </article>
+  <article class="golden_hour" v-if="hourBeforeSunSet">
+    <p>
+      {{ sunSet.toLocaleString("en-us", timeOptionsWithMin).toLowerCase() }} sun
+      set
+    </p>
+  </article>
 </template>
 
 <style lang="scss" scoped>
 .hour {
-  background-color: antiquewhite;
+  background-color: #b0d3ef;
   text-align: left;
   display: flex;
   padding: 0 1rem;
 
-  & + .hour {
-    border-top: solid 1px #ddd;
+  color: #222d;
+
+  &.night_time {
+    color: #dddd;
+    background-color: #000c32;
   }
+
   &.past {
     opacity: 0.5;
   }
   &.now {
-    background-color: azure;
+    // color: #222d;
+
+    padding: 1rem;
+    box-shadow: inset 0 0 0 .5rem #fff3;
   }
+}
+
+.golden_hour {
+  padding: 0 1rem;
+  p {
+    margin: 0;
+    padding: 0.5rem;
+  }
+  background-color: #eab968;
 }
 
 .data {
@@ -153,14 +201,15 @@ const tempPercent = computed(() => {
     margin: 0;
   }
 }
-.temp-bar {
+.temp_bar {
   flex-basis: 35%;
-  background-color: gray;
+  background-color: #fff2;
   position: relative;
   margin: 0 10px;
 
   .spot {
-    background-color: black;
+    background-color: #fff5;
+    border-radius: 5px;
     height: 100%;
     width: 10px;
     position: absolute;

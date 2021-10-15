@@ -43,6 +43,9 @@ export const crunchWeatherData = (
       units: rollup(-1, rawWeatherData.hourly_units) as HourlyUnits,
       values: rollup(i, rawWeatherData.hourly) as HourlyData,
     };
+    if (lastHour) {
+      lastHour.nextHour = hour;
+    }
     hour.tense = computeTense(hour.date, 1);
     hour.newWeatherCode =
       lastHour?.values.weathercode != hour.values.weathercode;
@@ -69,6 +72,9 @@ export const crunchWeatherData = (
       if (apparentTempRange.max < day.values.apparent_temperature_max)
         apparentTempRange.max = day.values.apparent_temperature_max;
 
+      if (lastDay) {
+        lastDay.nextDay = day;
+      }
       days.push(day);
       lastDay = day;
     }

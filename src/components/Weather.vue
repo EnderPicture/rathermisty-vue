@@ -131,13 +131,15 @@ fetchCurrentLocation();
     </article>
   </section>
   <p>
-    <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
+    <a href="https://open-meteo.com/" target="_blank">Weather data by Open-Meteo.com</a>
   </p>
 </template>
 
 <style lang="scss" scoped>
 .all-weather {
-  max-width: 30rem;
+  width: 100%;
+  padding: 0 20px;
+  max-width: 500px;
   margin: 0 auto;
 }
 </style>

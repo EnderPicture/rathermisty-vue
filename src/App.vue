@@ -12,17 +12,24 @@
 </template>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+/* html {
+  overflow-y: scroll;
+} */
 body {
   margin: 0;
+  
+  margin-right: calc(100% - 100vw);
+  overflow-x: hidden;
+
+  /* overflow-y: scroll; */
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
-
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
