@@ -210,6 +210,7 @@ export interface WeatherData {
 
   tempRange: ValueRange;
   apparentTempRange: ValueRange;
+  maxPrecipitation: number;
 }
 
 export interface ValueRange {

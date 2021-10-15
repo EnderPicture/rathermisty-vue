@@ -25,6 +25,7 @@ const hourDetailsOpen = ref(props.day.tense === "now");
 </script>
 
 <template>
+<div class="padding">
   <div class="daily-con">
     <div class="day-stick">
       <h2>
@@ -45,22 +46,27 @@ const hourDetailsOpen = ref(props.day.tense === "now");
       </template>
       <template v-slot:details>
         <HourSlot
-          v-for="hour in day.hours"
+          v-for="(hour, index) in day.hours"
           :hour="hour"
           :weather-data="weatherData"
           :options="options"
           :day="day"
+          :index="index"
+          :key="+hour.date"
         />
       </template>
     </Accordion>
   </div>
+</div>
 </template>
 
 <style lang="scss" scoped>
+.padding {
+  padding-bottom: 1rem;;
+}
 .daily-con {
   clip-path: inset(0% 0% 0% 0% round 20px);
   background-color: beige;
-  margin-bottom: 1rem;
 }
 .day-stick {
   position: sticky;

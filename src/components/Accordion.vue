@@ -30,7 +30,7 @@ const controledOpen = ref(false);
 onMounted(() => {
   controledOpen.value = props.open;
   if (props.open && container.value) {
-    container.value.style.height = 'auto';
+    container.value.style.height = "auto";
   }
 });
 
@@ -49,20 +49,22 @@ watch(
     <summary @click="$emit('toggle-accordion')">
       <slot name="summary"></slot>
     </summary>
-    <transition
-      name="expand"
-      @enter="enterExpand"
-      @leave="leaveExpand"
-      @before-leave="beforeLeaveExpand"
-      @after-enter="afterEnterExpand"
-      @after-leave="afterLeaveExpand"
-    >
-      <div ref="container" class="container" v-if="open">
-        <div>
-          <slot name="details"></slot>
+    <div class="clip">
+      <transition
+        name="expand"
+        @enter="enterExpand"
+        @leave="leaveExpand"
+        @before-leave="beforeLeaveExpand"
+        @after-enter="afterEnterExpand"
+        @after-leave="afterLeaveExpand"
+      >
+        <div ref="container" class="container" v-if="open">
+          <div>
+            <slot name="details"></slot>
+          </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </div>
   </details>
 </template>
 
@@ -74,6 +76,11 @@ summary {
 .container {
   overflow: hidden;
   height: 0px;
+  transform: translateY(-50px);
+  transform: translateY(0);
+}
+.clip {
+  overflow: hidden;
 }
 
 details {
@@ -84,10 +91,13 @@ details {
 
 .expand-enter-active,
 .expand-leave-active {
-  transition: .5s cubic-bezier(.25,0,.25,1);
+  transition: opacity 0.5s cubic-bezier(0.25, 0, 0.25, 1),
+    height 0.5s cubic-bezier(0.25, 0, 0.25, 1),
+    transform 0.5s cubic-bezier(0.25, 0, 0.25, 1) 0.15s;
 }
 .expand-enter-from,
 .expand-leave-to {
   opacity: 0;
+  transform: translateY(-50px);
 }
 </style>

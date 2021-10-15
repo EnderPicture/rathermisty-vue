@@ -5,22 +5,33 @@
 </script>
 
 <template>
-  <router-link to="/">home</router-link>
-  <router-link to="/about">about</router-link>
+  <div class="nav">
+    <router-link to="/">home</router-link>
+    <router-link to="/about">about</router-link>
+  </div>
 
   <router-view />
 </template>
 
-<style>
+<style lang="scss">
 * {
   box-sizing: border-box;
 }
 /* html {
   overflow-y: scroll;
 } */
+
+.nav {
+  display: flex;
+  justify-content: center;
+  > a {
+    padding: .5rem 1rem;
+  }
+}
+
 body {
   margin: 0;
-  
+
   margin-right: calc(100% - 100vw);
   overflow-x: hidden;
 

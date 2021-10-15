@@ -12,6 +12,7 @@ const props = defineProps<{
   day: WeatherDay;
   weatherData: WeatherData;
   options: Options;
+  index: number;
 }>();
 
 const weatherCodeMap = new Map<number, string>([
@@ -83,6 +84,12 @@ const tempPercent = computed(() => {
   }
 });
 
+const precipitationPrecent = computed(() => {
+  return (
+    (props.hour.values.precipitation / props.weatherData.maxPrecipitation) * 100
+  );
+});
+
 let sunRise = new Date(props.day.values.sunrise);
 let sunSet = new Date(props.day.values.sunset);
 
@@ -108,35 +115,37 @@ const hourBeforeSunSet = +props.hour.date < +sunSet && +sunSet < +nextHour;
     }"
   >
     <div class="info">
-      <p>
-        {{ hour.date.toLocaleString("en-us", timeOptions).toLowerCase() }}
-      </p>
-      <p v-if="hour.newWeatherCode">
+      <p v-if="hour.newWeatherCode || index === 0">
         {{ weatherCodeMap.get(hour.values.weathercode) }}
       </p>
-    </div>
-    <div class="data">
-      <p v-if="options.useFeelLikeTemp">
-        {{ hour.values.apparent_temperature.toFixed(1) }}
-        {{ hour.units.apparent_temperature }}
-      </p>
       <p v-else>
-        {{ hour.values.temperature_2m.toFixed(1) }}
-        {{ hour.units.temperature_2m }}
-      </p>
-      <p v-if="hour.values.precipitation > 0">
-        {{ hour.values.precipitation }} {{ hour.units.precipitation }}
+        {{ hour.date.toLocaleString("en-us", timeOptions).toLowerCase() }}
       </p>
     </div>
+    <div class="data"></div>
     <div class="temp_bar">
-      <div class="spot" :style="{ left: `${tempPercent}%` }"></div>
+      <div class="spot" :style="{ left: `${tempPercent}%` }">
+        <template v-if="index % 2 == 0">
+          <p v-if="options.useFeelLikeTemp">
+            {{ hour.values.apparent_temperature.toFixed(1) }}
+            {{ hour.units.temperature_2m }}
+          </p>
+          <p v-else>
+            {{ hour.values.temperature_2m.toFixed(1) }}
+            {{ hour.units.temperature_2m }}
+          </p>
+        </template>
+      </div>
+      <div class="bar" :style="{ width: `${precipitationPrecent}%` }">
+        <p v-if="hour.values.precipitation > 0 && (index + 1) % 2 == 0">
+          {{ hour.values.precipitation }}
+        </p>
+      </div>
     </div>
   </article>
   <article class="golden_hour" v-if="hourBeforeSunRise">
     <p>
-      {{
-        sunRise.toLocaleString("en-us", timeOptionsWithMin).toLowerCase()
-      }}
+      {{ sunRise.toLocaleString("en-us", timeOptionsWithMin).toLowerCase() }}
       sun rise
     </p>
   </article>
@@ -150,10 +159,12 @@ const hourBeforeSunSet = +props.hour.date < +sunSet && +sunSet < +nextHour;
 
 <style lang="scss" scoped>
 .hour {
+  overflow: hidden;
   background-color: #b0d3ef;
   text-align: left;
   display: flex;
   padding: 0 1rem;
+  z-index: 0;
 
   color: #222d;
 
@@ -163,13 +174,12 @@ const hourBeforeSunSet = +props.hour.date < +sunSet && +sunSet < +nextHour;
   }
 
   &.past {
-    opacity: 0.5;
+    // opacity: 0.5;
   }
   &.now {
-    // color: #222d;
-
-    padding: 1rem;
-    box-shadow: inset 0 0 0 .5rem #fff3;
+    color: #222d;
+    background-color: greenyellow;
+    z-index: 10;
   }
 }
 
@@ -183,16 +193,15 @@ const hourBeforeSunSet = +props.hour.date < +sunSet && +sunSet < +nextHour;
 }
 
 .data {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   * {
-    text-align: right;
     margin: 0;
   }
 }
 .info {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -210,11 +219,40 @@ const hourBeforeSunSet = +props.hour.date < +sunSet && +sunSet < +nextHour;
   .spot {
     background-color: #fff5;
     border-radius: 5px;
-    height: 100%;
-    width: 10px;
+    // height: 100%;
+    // width: 10px;
     position: absolute;
-    top: 0;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.2rem;
+
+    > p {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+  .bar {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    background-color: rgba(92, 192, 223, 0.333);
+    padding: 0.2rem 0;
+    height: 100%;
+    display: flex;
+    border-radius: 0 5px 5px 0;
+    justify-content: flex-end;
+    align-items: center;
+
+    > p {
+      padding: 0.2rem;
+      margin: 0;
+      text-align: right;
+      white-space: nowrap;
+    }
   }
 }
 </style>

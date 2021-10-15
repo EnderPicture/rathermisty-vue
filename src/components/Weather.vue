@@ -9,6 +9,7 @@ import {
 } from "../interfaces/Types";
 import HourSlot from "./HourSlot.vue";
 import DaySlot from "./DaySlot.vue";
+import Accordion from "./Accordion.vue";
 import { crunchWeatherData } from "../helpers/data-crunch";
 
 const options = ref<Options>({
@@ -110,17 +111,20 @@ fetchCurrentLocation();
     <input type="checkbox" v-model="options.useFeelLikeTemp" />
   </label>
   <section class="all-weather" v-if="weatherData">
-    <details>
-      <summary>past</summary>
-      <article>
+    <Accordion
+      :open="!options.hidePast"
+      @toggle-accordion="options.hidePast = !options.hidePast"
+    >
+      <template v-slot:summary> <p>show past</p> </template>
+      <template v-slot:details>
         <DaySlot
           v-for="day in pastDays"
           :day="day"
           :weather-data="weatherData"
           :options="options"
         />
-      </article>
-    </details>
+      </template>
+    </Accordion>
     <article>
       <DaySlot
         v-for="day in nowFutureDays"
@@ -130,16 +134,26 @@ fetchCurrentLocation();
       />
     </article>
   </section>
-  <p>
-    <a href="https://open-meteo.com/" target="_blank">Weather data by Open-Meteo.com</a>
+  <p class="attribution">
+    <a href="https://open-meteo.com/" target="_blank"
+      >Weather data by Open-Meteo.com</a
+    >
   </p>
 </template>
 
 <style lang="scss" scoped>
+label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .all-weather {
   width: 100%;
   padding: 0 20px;
   max-width: 500px;
   margin: 0 auto;
+}
+.attribution {
+  text-align: center;
 }
 </style>

@@ -28,6 +28,7 @@ export const crunchWeatherData = (
     min: Number.MAX_VALUE,
     max: Number.MIN_VALUE,
   };
+  let maxPrecipitation = 0;
 
   let lastHour: WeatherHour | null = null;
   let lastDay: WeatherDay | null = null;
@@ -49,6 +50,9 @@ export const crunchWeatherData = (
     hour.tense = computeTense(hour.date, 1);
     hour.newWeatherCode =
       lastHour?.values.weathercode != hour.values.weathercode;
+    if (maxPrecipitation < hour.values.precipitation) {
+      maxPrecipitation = hour.values.precipitation;
+    }
 
     // new day
     if (lastHour?.date.getDate() !== hour.date.getDate()) {
@@ -87,6 +91,7 @@ export const crunchWeatherData = (
 
     tempRange: tempRange,
     apparentTempRange: apparentTempRange,
+    maxPrecipitation: maxPrecipitation,
   };
 };
 
