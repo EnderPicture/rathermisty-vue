@@ -76,7 +76,6 @@ summary {
 .container {
   overflow: hidden;
   height: 0px;
-  transform: translateY(-50px);
   transform: translateY(0);
 }
 .clip {
@@ -91,13 +90,13 @@ details {
 
 .expand-enter-active,
 .expand-leave-active {
-  transition: opacity 0.5s cubic-bezier(0.25, 0, 0.25, 1),
-    height 0.5s cubic-bezier(0.25, 0, 0.25, 1),
-    transform 0.5s cubic-bezier(0.25, 0, 0.25, 1) 0.15s;
+  transition: opacity 0.35s cubic-bezier(0.25, 0, 0.25, 1),
+    height 0.35s cubic-bezier(0.25, 0, 0.25, 1),
+    transform 0.35s cubic-bezier(0.25, 0, 0.25, 1);
 }
 .expand-enter-from,
 .expand-leave-to {
   opacity: 0;
-  transform: translateY(-50px);
+  transform: translateY(-10px);
 }
 </style>
