@@ -148,5 +148,6 @@ fetchCurrentLocation();
   font-size: 6rem;
   color: white;
   opacity: 0.9;
+  font-weight: 900;
 }
 </style>
