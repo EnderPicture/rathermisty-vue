@@ -7,9 +7,15 @@ import {
   WeatherDay,
   Options,
 } from "../interfaces/Types";
+import HourSlot from "./HourSlot.vue";
+import DaySlot from "./DaySlot.vue";
+import Accordion from "./Accordion.vue";
 import { crunchWeatherData } from "../helpers/data-crunch";
 
-import { weatherCodeMap } from "../helpers/helpers";
+const options = ref<Options>({
+  useFeelLikeTemp: true,
+  hidePast: true,
+});
 
 const lat = ref(0);
 const long = ref(0);
@@ -22,16 +28,16 @@ const weatherData = computed<WeatherData | undefined>(() => {
   }
 });
 const pastDays = computed<WeatherDay[] | undefined>(() => {
-  return weatherData.value?.days.filter((day) => day.tense === "past");
+  if (weatherData.value) {
+    return weatherData.value.days.filter((day) => day.tense === "past");
+  }
 });
-const futureDays = computed<WeatherDay[] | undefined>(() => {
-  return weatherData.value?.days.filter((day) => day.tense === "future");
-});
-const today = computed<WeatherDay | undefined>(() => {
-  return weatherData.value?.days.find((day) => day.tense === "now");
-});
-const thisHour = computed<WeatherHour | undefined>(() => {
-  return today.value?.hours.find((hour) => hour.tense === "now");
+const nowFutureDays = computed<WeatherDay[] | undefined>(() => {
+  if (weatherData.value) {
+    return weatherData.value.days.filter(
+      (day) => day.tense === "future" || day.tense === "now"
+    );
+  }
 });
 
 const fetchWeatherData = () => {
@@ -41,10 +47,9 @@ const fetchWeatherData = () => {
   let update = true;
 
   if (cachedWeatherData && cachedWeatherDataTime) {
-    const updateTime = new Date(Number.parseInt(cachedWeatherDataTime));
-    const timeSinceUpdate = Date.now() - updateTime.getTime();
-    const updateInterval = new Date(0).setUTCHours(1);
-    update = timeSinceUpdate > updateInterval;
+    update =
+      Date.now() - new Date(Number.parseInt(cachedWeatherDataTime)).getTime() >
+      new Date(0).setUTCHours(1);
   }
 
   if (update) {
@@ -76,16 +81,16 @@ const fetchCurrentLocation = () => {
   navigator.geolocation.getCurrentPosition((position) => {
     let newLat = position.coords.latitude;
     let newLong = position.coords.longitude;
+    // let newLat = 37.7577627;
+    // let newLong = -122.4726194;
 
-    const shouldUpdate =
+    if (
       Math.floor(lat.value * 1000) !== Math.floor(newLat * 1000) ||
-      Math.floor(long.value * 1000) !== Math.floor(newLong * 1000);
-
-    if (shouldUpdate) {
+      Math.floor(long.value * 1000) !== Math.floor(newLong * 1000)
+    ) {
       lat.value = newLat;
       long.value = newLong;
 
-      // save new copy
       localStorage.setItem("lat", lat.value.toString());
       localStorage.setItem("long", long.value.toString());
 
@@ -99,54 +104,56 @@ fetchCurrentLocation();
 </script>
 
 <template>
-  <div class="background"></div>
-  <main class="weather-container" v-if="thisHour">
-    <p class="temp">{{ thisHour.values.apparent_temperature }}</p>
-    <p class="weather">{{ weatherCodeMap.get(thisHour.values.weathercode) }}</p>
-  </main>
+  <!-- <p>{{ lat }}</p>
+  <p>{{ long }}</p> -->
+  <label>
+    <p>feel like tempreature</p>
+    <input type="checkbox" v-model="options.useFeelLikeTemp" />
+  </label>
+  <section class="all-weather" v-if="weatherData">
+    <Accordion
+      :open="!options.hidePast"
+      @toggle-accordion="options.hidePast = !options.hidePast"
+    >
+      <template v-slot:summary> <p>show past</p> </template>
+      <template v-slot:details>
+        <DaySlot
+          v-for="day in pastDays"
+          :day="day"
+          :weather-data="weatherData"
+          :options="options"
+        />
+      </template>
+    </Accordion>
+    <article>
+      <DaySlot
+        v-for="day in nowFutureDays"
+        :day="day"
+        :weather-data="weatherData"
+        :options="options"
+      />
+    </article>
+  </section>
   <p class="attribution">
-    Weather data by
-    <a href="https://open-meteo.com/" target="_blank"> Open-Meteo.com </a>
+    <a href="https://open-meteo.com/" target="_blank"
+      >Weather data by Open-Meteo.com</a
+    >
   </p>
 </template>
 
 <style lang="scss" scoped>
-.background {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  z-index: -100;
-  background: linear-gradient(180deg, #5f8ace 0%, #3069c2 100%);
+label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.weather-container {
+.all-weather {
+  width: 100%;
+  padding: 0 20px;
+  max-width: 500px;
   margin: 0 auto;
-  max-width: 25rem;
-  padding: 1rem;
 }
 .attribution {
   text-align: center;
-  color: white;
-  opacity: 0.8;
-
-  a {
-    color: inherit;
-    transition: opacity 0.5s ease;
-    &:hover {
-      transition: opacity 0.1s ease;
-      opacity: 0.5;
-    }
-    &:active {
-      transition: opacity 0.1s ease;
-      opacity: 0.4;
-    }
-  }
-}
-
-.temp {
-  font-size: 6rem;
-  color: white;
-  opacity: 0.9;
 }
 </style>
