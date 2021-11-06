@@ -101,7 +101,10 @@ fetchCurrentLocation();
 <template>
   <div class="background"></div>
   <main class="weather-container" v-if="thisHour">
-    <p class="temp">{{ thisHour.values.apparent_temperature }}</p>
+    <p class="temp">
+      {{ thisHour.values.apparent_temperature }}
+      <sub>{{ thisHour.units.apparent_temperature }}</sub>
+    </p>
     <p class="weather">{{ weatherCodeMap.get(thisHour.values.weathercode) }}</p>
   </main>
   <p class="attribution">
@@ -149,5 +152,17 @@ fetchCurrentLocation();
   color: white;
   opacity: 0.9;
   font-weight: 900;
+  margin: 0;
+  > sub {
+    font-size: 3rem;
+    vertical-align: baseline;
+  }
+}
+.weather {
+  font-size: 3rem;
+  color: white;
+  opacity: 0.9;
+  font-weight: 400;
+  margin: 0;
 }
 </style>
