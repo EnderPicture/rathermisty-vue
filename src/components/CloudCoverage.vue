@@ -35,7 +35,7 @@ defineProps<{
               white ${50 + percent / 2}%,
               #fff0 ${50 + percent / 2}%
             )`,
-            'animation-duration': `${1/windSpeed*100}s`,
+            'animation-duration': `${((1 / windSpeed) * 100).toFixed(1)}s`,
           }"
         ></div>
       </div>
@@ -75,7 +75,6 @@ defineProps<{
   .clouds-bg {
     background-position: top left;
     background-size: 20% 100%;
-    background-repeat: repeat-x;
     opacity: 0.2;
   }
   .animated {
@@ -98,7 +97,7 @@ defineProps<{
       transform: translateX(-50%);
     }
     to {
-      background-color: translateX(0);
+      transform: translateX(0%);
     }
   }
 }
