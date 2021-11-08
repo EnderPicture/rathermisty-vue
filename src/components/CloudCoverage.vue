@@ -2,23 +2,45 @@
 defineProps<{
   percent: number;
   unit: string;
+  windSpeeds?: number[];
 }>();
 </script>
 
 <template>
   <div class="cloud">
-    <div
-      class="clouds-bg"
-      :style="{
-        'background-image': `linear-gradient(
-          to right,
-          #fff0 ${50 - percent / 2}%,
-          white ${50 - percent / 2}%,
-          white ${50 + percent / 2}%,
-          #fff0 ${50 + percent / 2}%
-        )`,
-      }"
-    ></div>
+    <template v-if="windSpeeds === undefined">
+      <div
+        class="clouds-bg abs"
+        :style="{
+          'background-image': `linear-gradient(
+            to right,
+            #fff0 ${50 - percent / 2}%,
+            white ${50 - percent / 2}%,
+            white ${50 + percent / 2}%,
+            #fff0 ${50 + percent / 2}%
+          )`,
+        }"
+      ></div>
+    </template>
+    <template v-else>
+      <div class="abs animated">
+        <div
+          v-for="windSpeed in windSpeeds"
+          class="clouds-bg"
+          :style="{
+            'background-image': `linear-gradient(
+              to right,
+              #fff0 ${50 - percent / 2}%,
+              white ${50 - percent / 2}%,
+              white ${50 + percent / 2}%,
+              #fff0 ${50 + percent / 2}%
+            )`,
+            'animation-duration': `${1/windSpeed*100}s`,
+          }"
+        ></div>
+      </div>
+    </template>
+
     <p>
       {{ percent }}<sub>{{ unit }}</sub>
     </p>
@@ -32,7 +54,7 @@ defineProps<{
   align-items: center;
   justify-content: center;
   p {
-    margin: .25rem;
+    margin: 0.25rem;
     font-size: 1.2rem;
     font-weight: 800;
     opacity: 0.9;
@@ -42,17 +64,42 @@ defineProps<{
     vertical-align: baseline;
     opacity: 0.5;
   }
-  .clouds-bg {
+  .abs {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-position: bottom left;
+    filter: blur(5px);
+  }
+  .clouds-bg {
+    background-position: top left;
     background-size: 20% 100%;
     background-repeat: repeat-x;
     opacity: 0.2;
-    filter: blur(5px);
+  }
+  .animated {
+    display: flex;
+    flex-direction: column;
+    > .clouds-bg {
+      flex: 1;
+      width: 200%;
+      background-size: 10% 100%;
+      animation-name: scroll;
+      animation-timing-function: linear;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
+    }
+    overflow: hidden;
+  }
+
+  @keyframes scroll {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      background-color: translateX(0);
+    }
   }
 }
 </style>

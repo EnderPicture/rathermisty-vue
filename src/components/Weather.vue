@@ -111,7 +111,10 @@ fetchCurrentLocation();
   <div class="background"></div>
   <main class="weather-container" v-if="thisHour">
     <section>
-      <p class="intro-text">Currently, it's actually {{thisHour.values.temperature_2m}}{{thisHour.units.temperature_2m}} but feels like</p>
+      <p class="intro-text">
+        Currently, it's actually {{ thisHour.values.temperature_2m
+        }}{{ thisHour.units.temperature_2m }} but feels like
+      </p>
       <p class="temp">
         {{ thisHour.values.apparent_temperature
         }}<sub class="unit">{{ thisHour.units.apparent_temperature }}</sub>
@@ -151,6 +154,12 @@ fetchCurrentLocation();
         class="row-span-4"
         :percent="thisHour.values.cloudcover_low"
         :unit="thisHour.units.cloudcover_low"
+        :wind-speeds="[
+          thisHour.values.windspeed_180m,
+          thisHour.values.windspeed_120m,
+          thisHour.values.windspeed_80m,
+          thisHour.values.windspeed_10m,
+        ]"
       ></CloudCoverage>
       <p class="altitude">120<sub class="unit">m</sub></p>
       <WindDisplay
@@ -219,8 +228,8 @@ fetchCurrentLocation();
 }
 
 .intro-text {
-  opacity: .8;
-  margin-bottom: -.5rem;
+  opacity: 0.8;
+  margin-bottom: -0.5rem;
 }
 
 .unit {

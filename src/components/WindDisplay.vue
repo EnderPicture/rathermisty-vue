@@ -11,14 +11,11 @@ defineProps<{
     <div class="wind-direction">
       <div class="arrow">
         <img
-          src="../../public/direction.svg"
+          src="/direction.svg"
           alt=""
           :style="{ transform: `rotate(${windDirection}deg)` }"
         />
       </div>
-      <!-- <p>
-        {{ windDirection }}<sup class="unit">{{ windDirectionUnit }}</sup>
-      </p> -->
     </div>
     <p class="wind-speed">
       {{ windSpeed.toFixed(1) }}<sub class="unit">{{ windSpeedUnit }}</sub>
@@ -40,7 +37,6 @@ p {
     vertical-align: baseline;
     opacity: 0.5;
   }
-  // font-size: 1.5rem;
 }
 .wind {
   display: flex;
