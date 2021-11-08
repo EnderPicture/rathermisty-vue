@@ -82,8 +82,8 @@ const fetchCurrentLocation = () => {
   navigator.geolocation.getCurrentPosition((position) => {
     let newLat = position.coords.latitude;
     let newLong = position.coords.longitude;
-    // newLat = 34.0514791;
-    // newLong = -118.4095937;
+    // let newLat = 34.0514791;
+    // let newLong = -118.4095937;
 
     const shouldUpdate =
       Math.floor(lat.value * 1000) !== Math.floor(newLat * 1000) ||

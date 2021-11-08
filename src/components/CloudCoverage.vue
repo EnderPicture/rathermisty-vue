@@ -51,8 +51,7 @@ sub {
     background-position: bottom left;
     background-size: 20% 100%;
     background-repeat: repeat-x;
-    opacity: 0.3;
-    z-index: -1;
+    opacity: 0.2;
     filter: blur(5px);
   }
 }
