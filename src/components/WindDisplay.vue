@@ -33,6 +33,8 @@ p {
   opacity: 0.9;
   font-weight: 800;
   font-size: 1.2rem;
+  flex: 1;
+  text-align: right;
   sub {
     font-size: 0.6em;
     vertical-align: baseline;
@@ -42,6 +44,7 @@ p {
 }
 .wind {
   display: flex;
+  align-items: flex-end;
 
   * + * {
     margin-left: 0.5rem;
