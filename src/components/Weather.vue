@@ -111,7 +111,7 @@ fetchCurrentLocation();
   <div class="background"></div>
   <main class="weather-container" v-if="thisHour">
     <section>
-      <p class="intro-text">currently, it's actually {{thisHour.values.temperature_2m}}{{thisHour.units.temperature_2m}} but feels like</p>
+      <p class="intro-text">Currently, it's actually {{thisHour.values.temperature_2m}}{{thisHour.units.temperature_2m}} but feels like</p>
       <p class="temp">
         {{ thisHour.values.apparent_temperature
         }}<sub class="unit">{{ thisHour.units.apparent_temperature }}</sub>
@@ -220,6 +220,7 @@ fetchCurrentLocation();
 
 .intro-text {
   opacity: .8;
+  margin-bottom: -.5rem;
 }
 
 .unit {

@@ -21,7 +21,7 @@ defineProps<{
       </p> -->
     </div>
     <p class="wind-speed">
-      {{ windSpeed }}<sub class="unit">{{ windSpeedUnit }}</sub>
+      {{ windSpeed.toFixed(1) }}<sub class="unit">{{ windSpeedUnit }}</sub>
     </p>
   </div>
 </template>
