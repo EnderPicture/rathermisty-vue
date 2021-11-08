@@ -11,6 +11,7 @@ import { crunchWeatherData } from "../helpers/data-crunch";
 
 import { weatherCodeMap } from "../helpers/helpers";
 import CloudCoverage from "./CloudCoverage.vue";
+import WindDisplay from "./WindDisplay.vue";
 
 const lat = ref(0);
 const long = ref(0);
@@ -110,7 +111,7 @@ fetchCurrentLocation();
   <div class="background"></div>
   <main class="weather-container" v-if="thisHour">
     <section>
-      <p>currently, it's</p>
+      <p class="intro-text">currently, it's actually {{thisHour.values.temperature_2m}}{{thisHour.units.temperature_2m}} but feels like</p>
       <p class="temp">
         {{ thisHour.values.apparent_temperature
         }}<sub class="unit">{{ thisHour.units.apparent_temperature }}</sub>
@@ -140,38 +141,38 @@ fetchCurrentLocation();
       <p class="altitude">3000<sub class="unit">m</sub></p>
       <p class="col-span-2 altitude-line"></p>
       <p class="altitude">180<sub class="unit">m</sub></p>
-      <div>
-        <p class="wind-speed">
-          {{ thisHour.values.windspeed_180m
-          }}<sub class="unit">{{ thisHour.units.windspeed_180m }}</sub>
-        </p>
-      </div>
+      <WindDisplay
+        :wind-speed="thisHour.values.windspeed_180m"
+        :wind-speed-unit="thisHour.units.windspeed_180m"
+        :wind-direction="thisHour.values.winddirection_180m"
+        :wind-direction-unit="thisHour.units.winddirection_180m"
+      ></WindDisplay>
       <CloudCoverage
         class="row-span-4"
         :percent="thisHour.values.cloudcover_low"
         :unit="thisHour.units.cloudcover_low"
       ></CloudCoverage>
       <p class="altitude">120<sub class="unit">m</sub></p>
-      <div>
-        <p class="wind-speed">
-          {{ thisHour.values.windspeed_120m
-          }}<sub class="unit">{{ thisHour.units.windspeed_120m }}</sub>
-        </p>
-      </div>
+      <WindDisplay
+        :wind-speed="thisHour.values.windspeed_120m"
+        :wind-speed-unit="thisHour.units.windspeed_120m"
+        :wind-direction="thisHour.values.winddirection_120m"
+        :wind-direction-unit="thisHour.units.winddirection_120m"
+      ></WindDisplay>
       <p class="altitude">80<sub class="unit">m</sub></p>
-      <div>
-        <p class="wind-speed">
-          {{ thisHour.values.windspeed_80m
-          }}<sub class="unit">{{ thisHour.units.windspeed_80m }}</sub>
-        </p>
-      </div>
+      <WindDisplay
+        :wind-speed="thisHour.values.windspeed_80m"
+        :wind-speed-unit="thisHour.units.windspeed_80m"
+        :wind-direction="thisHour.values.winddirection_80m"
+        :wind-direction-unit="thisHour.units.winddirection_80m"
+      ></WindDisplay>
       <p class="altitude">10<sub class="unit">m</sub></p>
-      <div>
-        <p class="wind-speed">
-          {{ thisHour.values.windspeed_10m
-          }}<sub class="unit">{{ thisHour.units.windspeed_10m }}</sub>
-        </p>
-      </div>
+      <WindDisplay
+        :wind-speed="thisHour.values.windspeed_10m"
+        :wind-speed-unit="thisHour.units.windspeed_10m"
+        :wind-direction="thisHour.values.winddirection_10m"
+        :wind-direction-unit="thisHour.units.winddirection_10m"
+      ></WindDisplay>
       <p class="altitude">0<sub class="unit">m</sub></p>
       <p class="col-span-2 altitude-line"></p>
     </section>
@@ -186,7 +187,7 @@ fetchCurrentLocation();
 .background {
   position: fixed;
   width: 100vw;
-  height: 100vh;
+  height: 110vh;
   top: 0;
   left: 0;
   z-index: -100;
@@ -217,6 +218,10 @@ fetchCurrentLocation();
   }
 }
 
+.intro-text {
+  opacity: .8;
+}
+
 .unit {
   font-size: 0.6em;
   vertical-align: baseline;
@@ -241,7 +246,7 @@ fetchCurrentLocation();
   display: grid;
   grid-template-columns: min-content min-content 1fr;
   grid-auto-rows: auto;
-  gap: 0.5rem 1rem;
+  gap: 0.25rem 1rem;
   margin-top: 50px;
 
   p {
@@ -271,12 +276,6 @@ fetchCurrentLocation();
     background-color: white;
     align-self: center;
     opacity: 0.3;
-  }
-
-  .wind-speed {
-    opacity: 0.9;
-    font-weight: 800;
-    font-size: 1.5rem;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   percent: number;
   unit: string;
 }>();
@@ -26,22 +26,22 @@ const props = defineProps<{
 </template>
 
 <style lang="scss" scoped>
-p {
-  margin: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 800;
-  opacity: 0.9;
-}
-sub {
-  font-size: 0.6em;
-  vertical-align: baseline;
-  opacity: 0.5;
-}
 .cloud {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  p {
+    margin: .25rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    opacity: 0.9;
+  }
+  sub {
+    font-size: 0.6em;
+    vertical-align: baseline;
+    opacity: 0.5;
+  }
   .clouds-bg {
     position: absolute;
     top: 0;

@@ -1,0 +1,63 @@
+<script setup lang="ts">
+defineProps<{
+  windSpeed: number;
+  windSpeedUnit: string;
+  windDirection: number;
+  windDirectionUnit: string;
+}>();
+</script>
+<template>
+  <div class="wind">
+    <div class="wind-direction">
+      <div class="arrow">
+        <img
+          src="../../public/direction.svg"
+          alt=""
+          :style="{ transform: `rotate(${windDirection}deg)` }"
+        />
+      </div>
+      <!-- <p>
+        {{ windDirection }}<sup class="unit">{{ windDirectionUnit }}</sup>
+      </p> -->
+    </div>
+    <p class="wind-speed">
+      {{ windSpeed }}<sub class="unit">{{ windSpeedUnit }}</sub>
+    </p>
+  </div>
+</template>
+<style lang="scss" scoped>
+p {
+  margin: 0;
+}
+.wind-speed {
+  opacity: 0.9;
+  font-weight: 800;
+  font-size: 1.2rem;
+  sub {
+    font-size: 0.6em;
+    vertical-align: baseline;
+    opacity: 0.5;
+  }
+  // font-size: 1.5rem;
+}
+.wind {
+  display: flex;
+
+  * + * {
+    margin-left: 0.5rem;
+  }
+}
+.wind-direction {
+  position: relative;
+
+  img {
+    height: 1rem;
+  }
+
+  sup {
+    font-size: 0.6em;
+    vertical-align: super;
+    opacity: 0.5;
+  }
+}
+</style>
