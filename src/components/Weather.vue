@@ -113,7 +113,7 @@ fetchCurrentLocation();
     <section>
       <p class="intro-text">
         Currently, it's actually {{ thisHour.values.temperature_2m
-        }}{{ thisHour.units.temperature_2m }} 
+        }}{{ thisHour.units.temperature_2m }}
       </p>
       <p class="intro-text">but feels like</p>
       <p class="temp">
@@ -187,9 +187,15 @@ fetchCurrentLocation();
       <p class="col-span-2 altitude-line"></p>
     </section>
   </main>
-  <p class="attribution">
+  <p class="bottom-text">
+    all data on
+    <router-link to="/old">old site</router-link>
+  </p>
+  <p class="bottom-text">Made by Donny Wu</p>
+  <p class="bottom-text">
     Weather data by
     <a href="https://open-meteo.com/" target="_blank"> Open-Meteo.com </a>
+    this page will be updated with all data soon
   </p>
 </template>
 
@@ -209,7 +215,10 @@ fetchCurrentLocation();
   padding: 1rem;
   color: white;
 }
-.attribution {
+.bottom-text {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 25rem;
   text-align: center;
   color: white;
   opacity: 0.8;
