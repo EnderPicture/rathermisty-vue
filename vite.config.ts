@@ -15,9 +15,9 @@ export default defineConfig({
         "apple-touch-icon.png",
       ],
       manifest: {
-        name: "Name of your app",
-        short_name: "Short name of your app",
-        description: "Description of your app",
+        name: "rathermisty",
+        short_name: "rathermisty",
+        description: "a weather app",
         theme_color: "#5f8ace",
         icons: [
           {
