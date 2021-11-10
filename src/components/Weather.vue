@@ -49,11 +49,11 @@ const fetchWeatherData = (force = false) => {
     update = timeSinceUpdate > updateInterval;
   }
 
-  fetch(`https://photon.komoot.io/reverse?lon=${long.value}&lat=${lat.value}`)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data.features[0].properties);
-    });
+  // fetch(`https://photon.komoot.io/reverse?lon=${long.value}&lat=${lat.value}`)
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     console.log(data.features[0].properties);
+  //   });
   if (update || force) {
     fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat.value}&longitude=${long.value}&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,pressure_msl,precipitation,weathercode,snow_height,freezinglevel_height,cloudcover,cloudcover_low,cloudcover_mid,cloudcover_high,shortwave_radiation,direct_radiation,diffuse_radiation,evapotranspiration,vapor_pressure_deficit,windspeed_10m,windspeed_80m,windspeed_120m,windspeed_180m,winddirection_10m,winddirection_80m,winddirection_120m,winddirection_180m,windgusts_10m,soil_temperature_0cm,soil_temperature_6cm,soil_temperature_18cm,soil_temperature_54cm,soil_moisture_0_1cm,soil_moisture_1_3cm,soil_moisture_3_9cm,soil_moisture_9_27cm,soil_moisture_27_81cm&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum,precipitation_hours,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant,shortwave_radiation_sum&timezone=${timeZone}&past_days=2`
@@ -113,8 +113,9 @@ fetchCurrentLocation();
     <section>
       <p class="intro-text">
         Currently, it's actually {{ thisHour.values.temperature_2m
-        }}{{ thisHour.units.temperature_2m }} but feels like
+        }}{{ thisHour.units.temperature_2m }} 
       </p>
+      <p class="intro-text">but feels like</p>
       <p class="temp">
         {{ thisHour.values.apparent_temperature
         }}<sub class="unit">{{ thisHour.units.apparent_temperature }}</sub>
@@ -246,7 +247,7 @@ fetchCurrentLocation();
   margin: 0;
 }
 .weather {
-  font-size: 3rem;
+  font-size: 2rem;
   color: white;
   opacity: 0.8;
   font-weight: 400;

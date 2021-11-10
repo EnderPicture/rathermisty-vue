@@ -50,7 +50,7 @@ p {
   position: relative;
 
   img {
-    height: 1rem;
+    width: .7rem;
   }
 
   sup {
