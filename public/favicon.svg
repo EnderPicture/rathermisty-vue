@@ -1,0 +1,23 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_166:16" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="142" width="512" height="229">
+<rect width="276.242" height="57.1535" rx="28.5767" transform="matrix(-1 0 0 1 471.516 142)" fill="white"/>
+<rect width="116.688" height="57.1535" rx="28.5767" transform="matrix(-1 0 0 1 166.698 142)" fill="white"/>
+<rect width="359.591" height="57.1535" rx="28.5767" transform="matrix(-1 0 0 1 435.795 227.73)" fill="white"/>
+<rect width="166.698" height="57.1535" rx="28.5767" transform="matrix(-1 0 0 1 416.744 313.46)" fill="white"/>
+<rect width="73.8233" height="57.1535" rx="28.5767" transform="matrix(-1 0 0 1 221.47 313.46)" fill="white"/>
+<rect width="119.07" height="57.1535" rx="28.5767" transform="matrix(-1 0 0 1 119.07 313.46)" fill="white"/>
+<circle r="57.1535" transform="matrix(-1 0 0 1 442.94 199.153)" fill="white"/>
+<circle r="57.1535" transform="matrix(-1 0 0 1 454.847 268.214)" fill="white"/>
+<circle r="57.1535" transform="matrix(-1 0 0 1 388.167 313.46)" fill="white"/>
+<circle r="57.1535" transform="matrix(-1 0 0 1 354.828 227.73)" fill="white"/>
+</mask>
+<g mask="url(#mask0_166:16)">
+<rect y="76" width="512" height="359" fill="url(#paint0_linear_166:16)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_166:16" x1="0" y1="248" x2="512" y2="248" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#D2D2D2"/>
+</linearGradient>
+</defs>
+</svg>

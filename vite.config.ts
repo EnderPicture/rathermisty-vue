@@ -18,7 +18,7 @@ export default defineConfig({
         name: "Name of your app",
         short_name: "Short name of your app",
         description: "Description of your app",
-        theme_color: "#ffffff",
+        theme_color: "#5f8ace",
         icons: [
           {
             src: "pwa-192x192.png",
