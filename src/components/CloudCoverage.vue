@@ -73,8 +73,8 @@ defineProps<{
     filter: blur(5px);
   }
   .clouds-bg {
-    background-position: top left;
-    background-size: 20% 100%;
+    background-position: 25% 50%;
+    background-size: calc(100%/3) 100%;
     opacity: 0.2;
   }
   .animated {
@@ -83,7 +83,8 @@ defineProps<{
     > .clouds-bg {
       flex: 1;
       width: 200%;
-      background-size: 10% 100%;
+      background-position: 10% 50%;
+      background-size: calc(100%/6) 100%;
       animation-name: scroll;
       animation-timing-function: linear;
       animation-duration: 5s;

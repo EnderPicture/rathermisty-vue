@@ -187,15 +187,16 @@ fetchCurrentLocation();
       <p class="col-span-2 altitude-line"></p>
     </section>
   </main>
-  <p class="bottom-text">
-    all data on
-    <router-link to="/old">old site</router-link>
-  </p>
+
   <p class="bottom-text">Made by Donny Wu</p>
+  <p class="bottom-text">
+    more data on
+    <router-link to="/old">old page</router-link>. this page will be updated
+    with all data soon
+  </p>
   <p class="bottom-text">
     Weather data by
     <a href="https://open-meteo.com/" target="_blank"> Open-Meteo.com </a>
-    this page will be updated with all data soon
   </p>
 </template>
 
@@ -216,6 +217,7 @@ fetchCurrentLocation();
   color: white;
 }
 .bottom-text {
+  padding: 0 1rem;
   margin-right: auto;
   margin-left: auto;
   max-width: 25rem;
