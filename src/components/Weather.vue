@@ -43,6 +43,8 @@ const fetchWeatherData = (force = false) => {
   let update = true;
 
   if (cachedWeatherData && cachedWeatherDataTime) {
+    rawWeatherData.value = JSON.parse(cachedWeatherData);
+
     const updateTime = new Date(Number.parseInt(cachedWeatherDataTime));
     const timeSinceUpdate = Date.now() - updateTime.getTime();
     const updateInterval = new Date(0).setUTCHours(1);
@@ -64,8 +66,6 @@ const fetchWeatherData = (force = false) => {
         localStorage.setItem("weather-data", JSON.stringify(data));
         localStorage.setItem("weather-data-time", Date.now() + "");
       });
-  } else if (cachedWeatherData) {
-    rawWeatherData.value = JSON.parse(cachedWeatherData);
   }
 };
 
