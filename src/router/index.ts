@@ -9,7 +9,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/old",
     name: "old",
-    component: () => import("../components/WeatherOld.vue"),
+    component: () => import("../components/old/WeatherOld.vue"),
   },
   {
     path: "/about",

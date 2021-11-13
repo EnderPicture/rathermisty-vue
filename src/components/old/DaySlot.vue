@@ -6,8 +6,8 @@ import {
   WeatherData,
   WeatherDay,
   WeatherHour,
-} from "../interfaces/Types";
-import HourSlot from "./HourSlot.vue";
+} from "../../interfaces/Types";
+import HourSlot from "../old/HourSlot.vue";
 
 const props = defineProps<{
   day: WeatherDay;

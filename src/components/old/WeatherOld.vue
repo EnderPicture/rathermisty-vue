@@ -6,11 +6,11 @@ import {
   WeatherData,
   WeatherDay,
   Options,
-} from "../interfaces/Types";
+} from "../../interfaces/Types";
 import HourSlot from "./HourSlot.vue";
 import DaySlot from "./DaySlot.vue";
 import Accordion from "./Accordion.vue";
-import { crunchWeatherData } from "../helpers/data-crunch";
+import { crunchWeatherData } from "../../helpers/data-crunch";
 
 const options = ref<Options>({
   useFeelLikeTemp: true,

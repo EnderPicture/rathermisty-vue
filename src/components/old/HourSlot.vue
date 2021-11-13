@@ -5,8 +5,8 @@ import {
   WeatherData,
   WeatherDay,
   WeatherHour,
-} from "../interfaces/Types";
-import { weatherCodeMap } from "../helpers/helpers";
+} from "../../interfaces/Types";
+import { weatherCodeMap } from "../../helpers/helpers";
 const props = defineProps<{
   hour: WeatherHour;
   day: WeatherDay;
