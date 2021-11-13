@@ -30,6 +30,8 @@ body {
   margin-right: calc(100% - 100vw);
   overflow-x: hidden;
 
+  background-color: #000;
+
   /* overflow-y: scroll; */
 }
 #app {

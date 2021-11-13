@@ -13,6 +13,7 @@ import { weatherCodeMap } from "../helpers/helpers";
 import CloudCoverage from "./CloudCoverage.vue";
 import WindDisplay from "./WindDisplay.vue";
 import AltitudeDisplay from "./AltitudeDisplay.vue";
+import WeatherTimeline from "./WeatherTimeline.vue";
 
 const lat = ref(0);
 const long = ref(0);
@@ -23,12 +24,6 @@ const weatherData = computed<WeatherData | undefined>(() => {
   if (rawWeatherData.value) {
     return crunchWeatherData(rawWeatherData.value);
   }
-});
-const pastDays = computed<WeatherDay[] | undefined>(() => {
-  return weatherData.value?.days.filter((day) => day.tense === "past");
-});
-const futureDays = computed<WeatherDay[] | undefined>(() => {
-  return weatherData.value?.days.filter((day) => day.tense === "future");
 });
 const today = computed<WeatherDay | undefined>(() => {
   return weatherData.value?.days.find((day) => day.tense === "now");
@@ -110,8 +105,8 @@ fetchCurrentLocation();
 
 <template>
   <div class="background"></div>
-  <main class="weather-container" v-if="thisHour">
-    <section>
+  <main class="weather-container" v-if="weatherData && thisHour">
+    <section class="width">
       <p class="intro-text">
         Currently, it's actually {{ thisHour.values.temperature_2m
         }}{{ thisHour.units.temperature_2m }}
@@ -124,23 +119,30 @@ fetchCurrentLocation();
       <p class="weather">
         {{ weatherCodeMap.get(thisHour.values.weathercode) }}
       </p>
-      <AltitudeDisplay :this-hour="thisHour"></AltitudeDisplay>
     </section>
+    <AltitudeDisplay class="width" :this-hour="thisHour" />
+    <WeatherTimeline :days="weatherData?.days" />
   </main>
-
-  <p class="bottom-text">Made by Donny Wu</p>
-  <p class="bottom-text">
-    more data on
-    <router-link to="/old">old page</router-link>. this page will be updated
-    with all data soon
-  </p>
-  <p class="bottom-text">
-    Weather data by
-    <a href="https://open-meteo.com/" target="_blank"> Open-Meteo.com </a>
-  </p>
+  <footer>
+    <p class="bottom-text">Made by Donny Wu</p>
+    <p class="bottom-text">
+      more data on
+      <router-link to="/old">old page</router-link>. this page will be updated
+      with all data soon
+    </p>
+    <p class="bottom-text">
+      Weather data by
+      <a href="https://open-meteo.com/" target="_blank"> Open-Meteo.com </a>
+    </p>
+  </footer>
 </template>
 
 <style lang="scss" scoped>
+.width {
+  margin: 0 auto;
+  max-width: 25rem;
+  padding: 1rem;
+}
 .background {
   position: fixed;
   width: 100vw;
@@ -151,9 +153,6 @@ fetchCurrentLocation();
   background: linear-gradient(180deg, #5f8ace 0%, #3069c2 100%);
 }
 .weather-container {
-  margin: 0 auto;
-  max-width: 25rem;
-  padding: 1rem;
   color: white;
 }
 .bottom-text {
@@ -168,6 +167,7 @@ fetchCurrentLocation();
   a {
     color: inherit;
     transition: opacity 0.5s ease;
+    will-change: opacity;
     &:hover {
       transition: opacity 0.1s ease;
       opacity: 0.5;
