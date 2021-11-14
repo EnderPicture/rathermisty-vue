@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { WeatherDay } from "../interfaces/Types";
+import { WeatherData, WeatherDay } from "../interfaces/Types";
 import HourView from "./HourView.vue";
 
 defineProps<{
+  weatherData: WeatherData;
   days: WeatherDay[];
 }>();
 
@@ -25,6 +26,7 @@ const dayOptions: Intl.DateTimeFormatOptions = {
             :day="day"
             :hour="hour"
             :new-day="index === 0"
+            :weather-data="weatherData"
           />
         </article>
       </div>
@@ -54,12 +56,25 @@ const dayOptions: Intl.DateTimeFormatOptions = {
     display: flex;
   }
   .day-marker {
+    // position: relative;
     position: sticky;
     transform: translateZ(0);
     left: 0;
     writing-mode: vertical-rl;
     text-orientation: mixed;
     color: #ffffffcc;
+    font-weight: 800;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: white;
+      opacity: 0.2;
+      filter: blur(5px);
+    }
   }
 }
 </style>

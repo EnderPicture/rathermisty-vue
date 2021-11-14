@@ -121,7 +121,7 @@ fetchCurrentLocation();
         </p>
       </section>
       <AltitudeDisplay class="width" :this-hour="thisHour" />
-      <WeatherTimeline :days="weatherData?.days" />
+      <WeatherTimeline :days="weatherData?.days" :weather-data="weatherData" />
     </div>
   </main>
   <footer>
