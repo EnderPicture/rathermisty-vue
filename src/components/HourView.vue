@@ -58,24 +58,56 @@ const timeOptions: Intl.DateTimeFormatOptions = {
     <p class="weather">
       {{ weatherCodeMap.get(hour.values.weathercode) }}
     </p>
-    <img
-      class="wind"
-      src="/direction.svg"
-      alt=""
-      :style="{ transform: `rotate(${hour.values.winddirection_10m}deg)` }"
-    />
+
+    <div class="graph cloud">
+      <div
+        class="graph-bar cloud"
+        :style="{ transform: `scaleY(${hour.values.cloudcover_high}%)` }"
+      >
+        <div></div>
+      </div>
+    </div>
+    <div class="graph cloud">
+      <div
+        class="graph-bar cloud"
+        :style="{ transform: `scaleY(${hour.values.cloudcover_mid}%)` }"
+      >
+        <div></div>
+      </div>
+    </div>
+    <div class="graph cloud">
+      <div
+        class="graph-bar cloud"
+        :style="{ transform: `scaleY(${hour.values.cloudcover_low}%)` }"
+      >
+        <div></div>
+      </div>
+    </div>
+
     <div class="graph">
       <div
         class="graph-bar temperature"
-        :style="{ transform: `translateY(-${apparentTempPercent / 2}%)` }"
+        :style="{ transform: `translateY(-${apparentTempPercent}%)` }"
       >
-        <p class="temperature">{{ hour.values.apparent_temperature }}</p>
+        <p class="temperature">
+          {{ hour.values.apparent_temperature.toFixed(1) }}
+        </p>
+      </div>
+      <div
+        class="graph-bar wind"
+        :style="{ transform: `translateY(-${hour.values.windspeed_10m}%)` }"
+      >
+        <img
+          src="/direction.svg"
+          alt=""
+          :style="{ transform: `rotate(${hour.values.winddirection_10m}deg)` }"
+        />
       </div>
       <div
         class="graph-bar precipitation"
-        :style="{ transform: `scaleY(${precipitationPrecent / 2}%)` }"
+        :style="{ transform: `scaleY(${precipitationPrecent}%)` }"
       >
-        <p class="precipitation"></p>
+        <div></div>
       </div>
     </div>
   </div>
@@ -88,20 +120,20 @@ p {
   display: flex;
   flex-direction: column;
 
+  // contain: strict;
+  // width: 1rem;
+  // height: 50rem;
+
   // will-change: opacity;
-  transition: opacity 0.5s ease;
-  &:hover {
-    transition: opacity 0.1s ease;
-    opacity: 0.5;
-  }
+  // transition: opacity 0.5s ease;
+  // &:hover {
+  //   transition: opacity 0.1s ease;
+  //   opacity: 0.5;
+  // }
 
   > * + * {
     margin-top: 0.5rem;
   }
-}
-.wind {
-  width: 1rem;
-  height: 1rem;
 }
 .time {
   text-align: end;
@@ -126,18 +158,25 @@ p {
   position: relative;
   margin-bottom: 1rem;
 
+  &.cloud {
+    margin-bottom: 0;
+    height: 1rem;
+    filter: blur(5px);
+    width: 100%;
+    transform: scaleX(200%);
+  }
+
   .graph-bar {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    pointer-events: none;
+    // pointer-events: none;
     z-index: 1;
 
     > :first-child {
       width: 100%;
-      height: 10px;
       position: absolute;
       bottom: 0;
       left: 0;
@@ -147,9 +186,26 @@ p {
         color: #ffffffcc;
       }
     }
+    &.wind {
+      > :first-child {
+        opacity: 0.5;
+        display: flex;
+        width: 100%;
+        height: 0.8rem;
+      }
+    }
     &.precipitation {
       transform-origin: bottom center;
       width: 2px;
+      > :first-child {
+        height: 100%;
+        opacity: 0.3;
+        background-color: white;
+      }
+    }
+    &.cloud {
+      transform-origin: center center;
+      // width: 2px;
       > :first-child {
         height: 100%;
         opacity: 0.3;
