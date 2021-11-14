@@ -58,10 +58,16 @@ const timeOptions: Intl.DateTimeFormatOptions = {
     <p class="weather">
       {{ weatherCodeMap.get(hour.values.weathercode) }}
     </p>
+    <img
+      class="wind"
+      src="/direction.svg"
+      alt=""
+      :style="{ transform: `rotate(${hour.values.winddirection_10m}deg)` }"
+    />
     <div class="graph">
       <div
         class="graph-bar temperature"
-        :style="{ transform: `translateY(-${tempPercent / 2}%)` }"
+        :style="{ transform: `translateY(-${apparentTempPercent / 2}%)` }"
       >
         <p class="temperature">{{ hour.values.apparent_temperature }}</p>
       </div>
@@ -92,6 +98,10 @@ p {
   > * + * {
     margin-top: 0.5rem;
   }
+}
+.wind {
+  width: 1rem;
+  height: 1rem;
 }
 .time {
   text-align: end;
