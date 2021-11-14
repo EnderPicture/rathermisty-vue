@@ -5,17 +5,38 @@ import HourView from "./HourView.vue";
 defineProps<{
   days: WeatherDay[];
 }>();
+
+const dayOptions: Intl.DateTimeFormatOptions = {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+};
 </script>
 <template>
-  <Section class="scroll">
-    <div class="track">
-      <template v-for="day in days">
-        <HourView v-for="hour in day.hours" :day="day" :hour="hour" />
-      </template>
+  <Section class="timeline">
+    <div class="scroll">
+      <div class="track">
+        <article class="day" v-for="day in days">
+          <div class="day-marker">
+            {{ day.date.toLocaleString("en-us", dayOptions) }}
+          </div>
+          <HourView
+            v-for="(hour, index) in day.hours"
+            :day="day"
+            :hour="hour"
+            :new-day="index === 0"
+          />
+        </article>
+      </div>
     </div>
   </Section>
 </template>
 <style lang="scss" scoped>
+.timeline {
+  margin-top: 50px;
+  margin-right: auto;
+  margin-left: auto;
+}
 .scroll {
   overflow-x: scroll;
   scrollbar-width: none;
@@ -23,12 +44,22 @@ defineProps<{
     display: none;
   }
   .track {
-    display: grid;
-    grid-auto-columns: auto;
-    grid-auto-flow: column;
-    grid-template-rows: auto auto;
     transform: translateZ(0);
-    gap: 2rem .1rem;
+    display: flex;
+    padding: 1rem 5rem;
+    align-items: stretch;
+    width: max-content;
+  }
+  .day {
+    display: flex;
+  }
+  .day-marker {
+    position: sticky;
+    transform: translateZ(0);
+    left: 0;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: #ffffffcc;
   }
 }
 </style>

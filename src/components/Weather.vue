@@ -104,24 +104,25 @@ fetchCurrentLocation();
 </script>
 
 <template>
-  <div class="background"></div>
   <main class="weather-container" v-if="weatherData && thisHour">
-    <section class="width">
-      <p class="intro-text">
-        Currently, it's actually {{ thisHour.values.temperature_2m
-        }}{{ thisHour.units.temperature_2m }}
-      </p>
-      <p class="intro-text">but feels like</p>
-      <p class="temp">
-        {{ thisHour.values.apparent_temperature
-        }}<sub class="unit">{{ thisHour.units.apparent_temperature }}</sub>
-      </p>
-      <p class="weather">
-        {{ weatherCodeMap.get(thisHour.values.weathercode) }}
-      </p>
-    </section>
-    <AltitudeDisplay class="width" :this-hour="thisHour" />
-    <WeatherTimeline :days="weatherData?.days" />
+    <div class="background">
+      <section class="width">
+        <p class="intro-text">
+          Currently, it's actually {{ thisHour.values.temperature_2m
+          }}{{ thisHour.units.temperature_2m }}
+        </p>
+        <p class="intro-text">but feels like</p>
+        <p class="temp">
+          {{ thisHour.values.apparent_temperature
+          }}<sub class="unit">{{ thisHour.units.apparent_temperature }}</sub>
+        </p>
+        <p class="weather">
+          {{ weatherCodeMap.get(thisHour.values.weathercode) }}
+        </p>
+      </section>
+      <AltitudeDisplay class="width" :this-hour="thisHour" />
+      <WeatherTimeline :days="weatherData?.days" />
+    </div>
   </main>
   <footer>
     <p class="bottom-text">Made by Donny Wu</p>
@@ -144,14 +145,14 @@ fetchCurrentLocation();
   padding: 1rem;
 }
 .background {
-  position: fixed;
-  width: 100vw;
-  height: 110vh;
-  top: 0;
-  left: 0;
-  z-index: -100;
   background: linear-gradient(180deg, #5f8ace 0%, #3069c2 100%);
 }
+
+::v-global(body) {
+  // background: linear-gradient(180deg, #5f8ace 0%, #3069c2 100%);
+  background-color: #3069c2;
+}
+
 .weather-container {
   color: white;
 }

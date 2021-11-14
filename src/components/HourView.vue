@@ -5,6 +5,7 @@ import { onMounted } from "@vue/runtime-core";
 import { ref } from "vue";
 
 const props = defineProps<{
+  newDay: boolean;
   day: WeatherDay;
   hour: WeatherHour;
 }>();
@@ -22,23 +23,55 @@ const timeOptions: Intl.DateTimeFormatOptions = {
 };
 </script>
 <template>
-  <template v-if="hour.tense !== 'past'">
-    <p>
-      {{ weatherCodeMap.get(hour.values.weathercode) }}
-    </p>
+  <div class="hour" v-if="hour.tense !== 'past'">
     <p class="time" ref="time">
       {{ hour.date.toLocaleString("en-us", timeOptions).toLowerCase() }}
     </p>
-  </template>
+    <div class="spacer"></div>
+    
+    <p class="weather">
+      {{ weatherCodeMap.get(hour.values.weathercode) }}
+    </p>
+  </div>
 </template>
 <style lang="scss" scoped>
+p {
+  white-space: nowrap;
+}
+.hour {
+  display: flex;
+  flex-direction: column;
+
+  // will-change: opacity;
+  transition: opacity .5s ease;
+  &:hover {
+    transition: opacity .1s ease;
+    opacity: .5;
+  }
+
+  *+* {
+    margin-top: 1rem;
+  }
+}
 .time {
-  flex: 1;
   text-align: end;
+}
+.spacer {
+  flex: 1;
 }
 p {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   margin: 0;
+  // opacity: .8;
+  color: #ffffffcc;
+}
+.weather {
+  // flex: 1;
+}
+.sticky {
+  position: sticky;
+  transform: translateZ(0);
+  left: 0;
 }
 </style>

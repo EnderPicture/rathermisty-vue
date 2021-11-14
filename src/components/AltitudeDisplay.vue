@@ -80,6 +80,12 @@ defineProps<{
   gap: 0.25rem 1rem;
   margin-top: 50px;
 
+  .unit {
+    font-size: 0.6em;
+    vertical-align: baseline;
+    opacity: 0.5;
+  }
+
   p {
     margin: 0;
   }
