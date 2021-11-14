@@ -82,7 +82,7 @@ p {
   display: flex;
   flex-direction: column;
 
-  will-change: opacity;
+  // will-change: opacity;
   transition: opacity 0.5s ease;
   &:hover {
     transition: opacity 0.1s ease;
@@ -123,6 +123,7 @@ p {
     top: 0;
     left: 0;
     pointer-events: none;
+    z-index: 1;
 
     > :first-child {
       width: 100%;
@@ -133,9 +134,7 @@ p {
     }
     &.temperature {
       > :first-child {
-        // background-color: white;
-        opacity: 0.5;
-        // filter: blur(2px);
+        color: #ffffffcc;
       }
     }
     &.precipitation {

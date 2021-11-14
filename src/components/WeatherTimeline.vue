@@ -14,7 +14,7 @@ const dayOptions: Intl.DateTimeFormatOptions = {
 };
 </script>
 <template>
-  <Section class="timeline">
+  <section class="timeline">
     <div class="scroll">
       <div class="track">
         <article class="day" v-for="day in days">
@@ -31,7 +31,7 @@ const dayOptions: Intl.DateTimeFormatOptions = {
         </article>
       </div>
     </div>
-  </Section>
+  </section>
 </template>
 <style lang="scss" scoped>
 .timeline {
@@ -56,7 +56,6 @@ const dayOptions: Intl.DateTimeFormatOptions = {
     display: flex;
   }
   .day-marker {
-    // position: relative;
     position: sticky;
     transform: translateZ(0);
     left: 0;
@@ -64,6 +63,7 @@ const dayOptions: Intl.DateTimeFormatOptions = {
     text-orientation: mixed;
     color: #ffffffcc;
     font-weight: 800;
+    z-index: 10;
     &::before {
       content: "";
       position: absolute;
