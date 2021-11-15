@@ -36,8 +36,7 @@ const dayOptions: Intl.DateTimeFormatOptions = {
 <style lang="scss" scoped>
 .timeline {
   margin-top: 50px;
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
 }
 .scroll {
   overflow-x: scroll;
@@ -46,35 +45,25 @@ const dayOptions: Intl.DateTimeFormatOptions = {
   &::-webkit-scrollbar {
     display: none;
   }
-  .track {
-    display: flex;
-    padding: 1rem 5rem;
-    align-items: stretch;
-    width: max-content;
-  }
-  .day {
-    display: flex;
-  }
-  .day-marker {
-    position: sticky;
-    transform: translateZ(0);
-    left: 0;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    color: #ffffffcc;
-    font-weight: 800;
-    z-index: 10;
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background-color: white;
-      opacity: 0.2;
-      filter: blur(5px);
-    }
-  }
+}
+.track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+  padding: 1rem 5rem;
+  width: max-content;
+}
+.day {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+}
+.day-marker {
+  position: sticky;
+  left: 0;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  z-index: 10;
+  font-weight: 800;
 }
 </style>

@@ -51,64 +51,28 @@ const timeOptions: Intl.DateTimeFormatOptions = {
 </script>
 <template>
   <div class="hour" v-if="hour.tense !== 'past'">
-    <p class="time" ref="time">
-      {{ hour.date.toLocaleString("en-us", timeOptions).toLowerCase() }}
-    </p>
-    <div class="spacer"></div>
+    <p>{{ hour.date.toLocaleString("en-us", timeOptions).toLowerCase() }}</p>
+    <div></div>
     <p class="weather">
       {{ weatherCodeMap.get(hour.values.weathercode) }}
     </p>
-
-    <div class="graph cloud">
-      <div
-        class="graph-bar cloud"
-        :style="{ transform: `scaleY(${hour.values.cloudcover_high}%)` }"
-      >
-        <div></div>
-      </div>
+    <div class="cloud-graph">
+      <div class="cloud" :style="{ height: `${hour.values.cloudcover_high}%` }"></div>
     </div>
-    <div class="graph cloud">
-      <div
-        class="graph-bar cloud"
-        :style="{ transform: `scaleY(${hour.values.cloudcover_mid}%)` }"
-      >
-        <div></div>
-      </div>
+    <div class="cloud-graph">
+      <div class="cloud" :style="{ height: `${hour.values.cloudcover_mid}%` }"></div>
     </div>
-    <div class="graph cloud">
-      <div
-        class="graph-bar cloud"
-        :style="{ transform: `scaleY(${hour.values.cloudcover_low}%)` }"
-      >
-        <div></div>
-      </div>
+    <div class="cloud-graph">
+      <div class="cloud" :style="{ height: `${hour.values.cloudcover_low}%` }"></div>
     </div>
-
     <div class="graph">
+      <p class="temperature" :style="{ bottom: `${apparentTempPercent}%` }">
+        {{ hour.values.apparent_temperature.toFixed(1) }}
+      </p>
       <div
-        class="graph-bar temperature"
-        :style="{ transform: `translateY(-${apparentTempPercent}%)` }"
-      >
-        <p class="temperature">
-          {{ hour.values.apparent_temperature.toFixed(1) }}
-        </p>
-      </div>
-      <div
-        class="graph-bar wind"
-        :style="{ transform: `translateY(-${hour.values.windspeed_10m}%)` }"
-      >
-        <img
-          src="/direction.svg"
-          alt=""
-          :style="{ transform: `rotate(${hour.values.winddirection_10m}deg)` }"
-        />
-      </div>
-      <div
-        class="graph-bar precipitation"
-        :style="{ transform: `scaleY(${precipitationPrecent}%)` }"
-      >
-        <div></div>
-      </div>
+        class="precipitation"
+        :style="{ height: `${precipitationPrecent}%` }"
+      ></div>
     </div>
   </div>
 </template>
@@ -117,23 +81,8 @@ p {
   white-space: nowrap;
 }
 .hour {
-  display: flex;
-  flex-direction: column;
-
-  // contain: strict;
-  // width: 1rem;
-  // height: 50rem;
-
-  // will-change: opacity;
-  // transition: opacity 0.5s ease;
-  // &:hover {
-  //   transition: opacity 0.1s ease;
-  //   opacity: 0.5;
-  // }
-
-  > * + * {
-    margin-top: 0.5rem;
-  }
+  display: grid;
+  grid-template-rows: 1fr auto auto;
 }
 .time {
   text-align: end;
@@ -145,73 +94,36 @@ p {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   margin: 0;
-  // opacity: .8;
   color: #ffffffcc;
 }
-.sticky {
-  position: sticky;
-  transform: translateZ(0);
+.graph {
+  height: 8rem;
+  position: relative;
+  margin-top: 2rem;
+}
+
+.temperature {
+  position: absolute;
   left: 0;
 }
-.graph {
-  height: 9rem;
-  position: relative;
-  margin-bottom: 1rem;
+.precipitation {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background-color: #ffffff50;
+}
 
-  &.cloud {
-    margin-bottom: 0;
-    height: 1rem;
-    filter: blur(5px);
-    width: 100%;
-    transform: scaleX(200%);
-  }
+.cloud-graph {
+  height: 2rem;
+  display: flex;
+  align-items: center;
+}
+.cloud {
+  width: 100%;
+  background-color: #ffffff30;
+  transform: scale(2,1);
 
-  .graph-bar {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    // pointer-events: none;
-    z-index: 1;
-
-    > :first-child {
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-    }
-    &.temperature {
-      > :first-child {
-        color: #ffffffcc;
-      }
-    }
-    &.wind {
-      > :first-child {
-        opacity: 0.5;
-        display: flex;
-        width: 100%;
-        height: 0.8rem;
-      }
-    }
-    &.precipitation {
-      transform-origin: bottom center;
-      width: 2px;
-      > :first-child {
-        height: 100%;
-        opacity: 0.3;
-        background-color: white;
-      }
-    }
-    &.cloud {
-      transform-origin: center center;
-      // width: 2px;
-      > :first-child {
-        height: 100%;
-        opacity: 0.3;
-        background-color: white;
-      }
-    }
-  }
+  filter: blur(5px);
 }
 </style>
