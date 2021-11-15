@@ -42,11 +42,11 @@ const dayOptions: Intl.DateTimeFormatOptions = {
 .scroll {
   overflow-x: scroll;
   scrollbar-width: none;
+  transform: translateZ(0);
   &::-webkit-scrollbar {
     display: none;
   }
   .track {
-    transform: translateZ(0);
     display: flex;
     padding: 1rem 5rem;
     align-items: stretch;
