@@ -57,13 +57,22 @@ const timeOptions: Intl.DateTimeFormatOptions = {
       {{ weatherCodeMap.get(hour.values.weathercode) }}
     </p>
     <div class="cloud-graph">
-      <div class="cloud" :style="{ height: `${hour.values.cloudcover_high}%` }"></div>
+      <div
+        class="cloud"
+        :style="{ height: `${hour.values.cloudcover_high}%` }"
+      ></div>
     </div>
     <div class="cloud-graph">
-      <div class="cloud" :style="{ height: `${hour.values.cloudcover_mid}%` }"></div>
+      <div
+        class="cloud"
+        :style="{ height: `${hour.values.cloudcover_mid}%` }"
+      ></div>
     </div>
     <div class="cloud-graph">
-      <div class="cloud" :style="{ height: `${hour.values.cloudcover_low}%` }"></div>
+      <div
+        class="cloud"
+        :style="{ height: `${hour.values.cloudcover_low}%` }"
+      ></div>
     </div>
     <div class="graph">
       <p class="temperature" :style="{ bottom: `${apparentTempPercent}%` }">
@@ -73,6 +82,15 @@ const timeOptions: Intl.DateTimeFormatOptions = {
         class="precipitation"
         :style="{ height: `${precipitationPrecent}%` }"
       ></div>
+      <img
+        class="wind"
+        src="/direction.svg"
+        alt=""
+        :style="{
+          transform: `rotate(${hour.values.winddirection_10m}deg)`,
+          bottom: `${hour.values.windspeed_10m}%`,
+        }"
+      />
     </div>
   </div>
 </template>
@@ -103,6 +121,8 @@ p {
 }
 
 .temperature {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
   position: absolute;
   left: 0;
 }
@@ -113,6 +133,13 @@ p {
   width: 2px;
   background-color: #ffffff50;
 }
+.wind {
+  position: absolute;
+  height: 12px;
+  width: 100%;
+  opacity: .5;
+  left: 0;
+}
 
 .cloud-graph {
   height: 2rem;
@@ -122,7 +149,7 @@ p {
 .cloud {
   width: 100%;
   background-color: #ffffff30;
-  transform: scale(2,1);
+  transform: scale(2, 1);
 
   filter: blur(5px);
 }

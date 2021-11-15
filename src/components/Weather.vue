@@ -145,11 +145,10 @@ fetchCurrentLocation();
   padding: 1rem;
 }
 .background {
-  background: linear-gradient(180deg, #5f8ace 0%, #3069c2 100%);
+  background-image: linear-gradient(180deg, #5f8ace 0%, #3069c2 100%);
 }
 
 ::v-global(body) {
-  // background: linear-gradient(180deg, #5f8ace 0%, #3069c2 100%);
   background-color: #3069c2;
 }
 

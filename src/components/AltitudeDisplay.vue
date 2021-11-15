@@ -67,6 +67,11 @@ defineProps<{
       :wind-direction="thisHour.values.winddirection_10m"
       :wind-direction-unit="thisHour.units.winddirection_10m"
     ></WindDisplay>
+    <div></div>
+    <p class="wind-speed">
+      {{ thisHour.values.windgusts_10m }}<sub class="unit">gusts</sub>
+    </p>
+    <div></div>
     <p class="altitude">0<sub class="unit">m</sub></p>
     <p class="col-span-2 altitude-line"></p>
   </section>
@@ -88,6 +93,20 @@ defineProps<{
 
   p {
     margin: 0;
+  }
+
+  .wind-speed {
+    white-space: nowrap;
+    opacity: 0.9;
+    font-weight: 800;
+    font-size: 1.2rem;
+    flex: 1;
+    text-align: right;
+    sub {
+      font-size: 0.6em;
+      vertical-align: baseline;
+      opacity: 0.5;
+    }
   }
 
   .col-span-2 {
