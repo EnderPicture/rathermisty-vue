@@ -3,14 +3,18 @@ import { useRegisterSW } from "virtual:pwa-register/vue";
 
 const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW();
 
-const close = async () => {
-  offlineReady.value = false;
-  needRefresh.value = false;
-};
+if (needRefresh.value) {
+  updateServiceWorker();
+}
+
+// const close = async () => {
+//   offlineReady.value = false;
+//   needRefresh.value = false;
+// };
 </script>
 
 <template>
-  <div v-if="offlineReady || needRefresh" class="pwa-toast" role="alert">
+  <!-- <div v-if="offlineReady || needRefresh" class="pwa-toast" role="alert">
     <div class="message">
       <span v-if="offlineReady"> App ready to work offline </span>
       <span v-else>
@@ -19,7 +23,7 @@ const close = async () => {
     </div>
     <button v-if="needRefresh" @click="updateServiceWorker()">Reload</button>
     <button @click="close">Close</button>
-  </div>
+  </div> -->
 </template>
 
 <style>
