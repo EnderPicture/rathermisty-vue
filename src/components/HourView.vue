@@ -58,19 +58,18 @@ const timeOptions: Intl.DateTimeFormatOptions = {
     </p>
     <div class="cloud-graph">
       <div
-        class="cloud"
+        v-if="hour.values.cloudcover_high > 0"
+        class="cloud high"
         :style="{ height: `${hour.values.cloudcover_high}%` }"
       ></div>
-    </div>
-    <div class="cloud-graph">
       <div
-        class="cloud"
+        v-if="hour.values.cloudcover_mid > 0"
+        class="cloud mid"
         :style="{ height: `${hour.values.cloudcover_mid}%` }"
       ></div>
-    </div>
-    <div class="cloud-graph">
       <div
-        class="cloud"
+        v-if="hour.values.cloudcover_low > 0"
+        class="cloud low"
         :style="{ height: `${hour.values.cloudcover_low}%` }"
       ></div>
     </div>
@@ -117,7 +116,7 @@ p {
 .graph {
   height: 8rem;
   position: relative;
-  margin-top: 2rem;
+  margin-top: 0.5rem;
 }
 
 .temperature {
@@ -137,20 +136,31 @@ p {
   position: absolute;
   height: 12px;
   width: 100%;
-  opacity: .5;
+  opacity: 0.5;
   left: 0;
 }
 
 .cloud-graph {
-  height: 2rem;
-  display: flex;
-  align-items: center;
+  margin-top: 0.5rem;
+  height: 5rem;
+  grid-template-rows: repeat(3, 1fr);
+  display: grid;
+  align-items: flex-end;
+  gap: 2px;
+  filter: blur(5px);
+  transform: scale(2, 1);
 }
 .cloud {
   width: 100%;
   background-color: #ffffff30;
-  transform: scale(2, 1);
-
-  filter: blur(5px);
+  &.high {
+    grid-row-start: 1;
+  }
+  &.mid {
+    grid-row-start: 2;
+  }
+  &.low {
+    grid-row-start: 3;
+  }
 }
 </style>
